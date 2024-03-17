@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class StoryContentResponseDto {
     private long id;
+    private long userId;
     private String title;
     private String content;
     private Timestamp creationDate;

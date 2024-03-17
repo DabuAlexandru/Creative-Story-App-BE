@@ -5,6 +5,8 @@ import com.example.masterthesisbe.dto.story.StoryContentResponseDto;
 import com.example.masterthesisbe.dto.story.StoryResponseDto;
 import com.example.masterthesisbe.dto.story.UpdateStoryRequestDto;
 import com.example.masterthesisbe.model.Story;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -19,8 +21,10 @@ public class StoryMapper {
             return null;
         }
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return new StoryResponseDto(
                 story.getId(),
+                story.getUserId(),
                 story.getTitle(),
                 story.getDescription(),
                 story.getCreationDate(),
@@ -35,6 +39,7 @@ public class StoryMapper {
 
         return new StoryContentResponseDto(
                 story.getId(),
+                story.getUserId(),
                 story.getTitle(),
                 story.getContent(),
                 story.getCreationDate(),

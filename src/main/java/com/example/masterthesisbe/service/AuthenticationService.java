@@ -1,0 +1,64 @@
+package com.example.masterthesisbe.service;
+
+import com.example.masterthesisbe.config.JwtService;
+import com.example.masterthesisbe.dto.auth.AuthenticationRequest;
+import com.example.masterthesisbe.dto.auth.AuthenticationResponse;
+import com.example.masterthesisbe.dto.auth.RegisterRequest;
+import com.example.masterthesisbe.dto.auth.UserDto;
+import com.example.masterthesisbe.exception.IncorrectCredentials;
+import com.example.masterthesisbe.helpers.mappers.UserMapper;
+import com.example.masterthesisbe.model.Role;
+import com.example.masterthesisbe.model.User;
+import com.example.masterthesisbe.repository.UserRepository;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.io.Console;
+
+@Service
+@RequiredArgsConstructor
+public class AuthenticationService {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
+
+    public AuthenticationResponse register(RegisterRequest request) {
+        var user = User.builder()
+                .penName(request.getPenName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
+                .build();
+        userRepository.save(user);
+        UserDto userResponse = userMapper.convertToResponseDto(user);
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder()
+                .user(userResponse)
+                .token(jwtToken)
+                .build();
+    }
+
+    public AuthenticationResponse login(AuthenticationRequest request) {
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+            )
+        );
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(IncorrectCredentials::new);
+        UserDto userResponse = userMapper.convertToResponseDto(user);
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .user(userResponse)
+                .build();
+    }
+}

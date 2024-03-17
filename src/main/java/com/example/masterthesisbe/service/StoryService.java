@@ -5,7 +5,9 @@ import com.example.masterthesisbe.dto.story.*;
 import com.example.masterthesisbe.helpers.mappers.StoryMapper;
 import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.repository.StoryRepository;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,17 @@ public class StoryService {
     public StoryService(StoryRepository storyRepository, StoryMapper storyMapper) {
         this.storyRepository = storyRepository;
         this.storyMapper = storyMapper;
+    }
+
+    public Page<StoryResponseDto> getStoriesPaginate(int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        Page<Story> storiesPagination = this.storyRepository.findAll(pageable);
+
+        List<StoryResponseDto> content = storiesPagination.getContent().stream()
+                .map(storyMapper::convertToResponseDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(content, storiesPagination.getPageable(), storiesPagination.getTotalElements());
     }
 
     public List<StoryResponseDto> getAllStoriesOfUser(int userId) {

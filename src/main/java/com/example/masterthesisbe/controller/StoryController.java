@@ -7,6 +7,7 @@ import com.example.masterthesisbe.dto.story.StoryResponseDto;
 import com.example.masterthesisbe.dto.story.UpdateStoryRequestDto;
 import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.service.StoryService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +15,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/story")
+@RequestMapping("api/story")
 public class StoryController {
     private final StoryService storyService;
 
     public StoryController(StoryService storyService) {
         this.storyService = storyService;
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<Page<StoryResponseDto>> retrieveAllStories(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return ResponseEntity.ok().body(this.storyService.getStoriesPaginate(page, size, sortBy));
     }
 
     @GetMapping("/ofUser/{userId}")
