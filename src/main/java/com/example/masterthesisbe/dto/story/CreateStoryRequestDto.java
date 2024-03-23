@@ -1,9 +1,11 @@
 package com.example.masterthesisbe.dto.story;
 
 import com.example.masterthesisbe.constants.StoryConstants;
+import com.example.masterthesisbe.model.Genre;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @ToString
 @Getter
@@ -13,6 +15,6 @@ import javax.validation.constraints.NotBlank;
 public class CreateStoryRequestDto {
     @NotBlank(message = StoryConstants.TITLE_NOT_BLANK_CONSTRAINT_MESSAGE)
     private String title;
-
     private String description;
+//    private Set<Genre> genres;
 }

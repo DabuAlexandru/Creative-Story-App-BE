@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -60,5 +62,16 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .user(userResponse)
                 .build();
+    }
+
+    public User getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = authentication.getName(); // Assuming email is used as the principal
+            return userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+        } else {
+            throw new RuntimeException("User not authenticated"); // Handle appropriately
+        }
     }
 }

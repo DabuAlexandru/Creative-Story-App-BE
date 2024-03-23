@@ -1,10 +1,11 @@
 package com.example.masterthesisbe.dto.story;
 
-import com.example.masterthesisbe.constants.StoryConstants;
+import com.example.masterthesisbe.dto.auth.UserDto;
+import com.example.masterthesisbe.model.Genre;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @ToString
 @Getter
@@ -13,9 +14,10 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class StoryResponseDto {
     private long id;
-    private long userId;
     private String title;
     private String description;
     private Timestamp creationDate;
     private Timestamp lastModifiedDate;
+//    private Set<Genre> genres;
+    private UserDto author;
 }

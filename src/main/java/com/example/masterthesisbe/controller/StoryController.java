@@ -31,9 +31,9 @@ public class StoryController {
         return ResponseEntity.ok().body(this.storyService.getStoriesPaginate(page, size, sortBy));
     }
 
-    @GetMapping("/ofUser/{userId}")
-    public ResponseEntity<List<StoryResponseDto>> retrieveStoriesForAuthor(@PathVariable Integer userId) {
-        return ResponseEntity.ok().body(this.storyService.getAllStoriesOfUser(userId));
+    @GetMapping("/ofAuthor/{authorId}")
+    public ResponseEntity<List<StoryResponseDto>> retrieveStoriesForAuthor(@PathVariable Integer authorId) {
+        return ResponseEntity.ok().body(this.storyService.getAllStoriesOfAuthor(authorId));
     }
 
     @GetMapping("/{storyId}")
