@@ -4,8 +4,7 @@ import com.example.masterthesisbe.dto.auth.UserDto;
 import com.example.masterthesisbe.model.Genre;
 import lombok.*;
 
-import java.sql.Timestamp;
-import java.util.Set;
+import java.time.Instant;
 
 @ToString
 @Getter
@@ -16,8 +15,8 @@ public class StoryResponseDto {
     private long id;
     private String title;
     private String description;
-    private Timestamp creationDate;
-    private Timestamp lastModifiedDate;
+    private Instant createdOn;
+    private Instant lastUpdatedOn;
 //    private Set<Genre> genres;
     private UserDto author;
 }

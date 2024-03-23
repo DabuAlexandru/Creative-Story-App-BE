@@ -34,8 +34,8 @@ public class StoryMapper {
                 story.getId(),
                 story.getTitle(),
                 story.getDescription(),
-                story.getCreationDate(),
-                story.getLastModifiedDate(),
+                story.getCreatedOn(),
+                story.getLastUpdatedOn(),
                 convertedAuthor
         );
     }
@@ -52,8 +52,8 @@ public class StoryMapper {
                 story.getId(),
                 story.getTitle(),
                 story.getContent(),
-                story.getCreationDate(),
-                story.getLastModifiedDate(),
+                story.getCreatedOn(),
+                story.getLastUpdatedOn(),
                 convertedAuthor
         );
     }
@@ -63,24 +63,15 @@ public class StoryMapper {
             return null;
         }
 
-        Date date = new Date();
-        Timestamp now = new Timestamp(date.getTime());
-
         return new Story(
                 newStory.getTitle(),
-                newStory.getDescription(),
+                newStory.getDescription()
 //                newStory.getGenres(),
-                now,
-                now
         );
     }
 
     public void updateStoryWithDto(Story story, UpdateStoryRequestDto storyDto) {
-        Date date = new Date();
-        Timestamp now = new Timestamp(date.getTime());
-
         story.setTitle(storyDto.getTitle());
         story.setDescription(storyDto.getDescription());
-        story.setLastModifiedDate(now);
     }
 }

@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -29,8 +27,12 @@ public class Story {
 
     private String title;
     private String description;
-    private Timestamp creationDate;
-    private Timestamp lastModifiedDate;
+
+    @CreationTimestamp
+    private Instant createdOn;
+    @UpdateTimestamp
+    private Instant lastUpdatedOn;
+
     // temporary integration - will be replaced
     private String content;
 
@@ -38,10 +40,8 @@ public class Story {
     @JoinColumn(name="author_id")
     private User author;
 
-    public Story(String title, String description, Timestamp creationDate, Timestamp lastModifiedDate) {
+    public Story(String title, String description) {
         this.title = title;
         this.description = description;
-        this.creationDate = creationDate;
-        this.lastModifiedDate = lastModifiedDate;
     }
 }
