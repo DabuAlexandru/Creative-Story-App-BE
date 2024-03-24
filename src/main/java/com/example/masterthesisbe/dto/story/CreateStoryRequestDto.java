@@ -16,5 +16,5 @@ public class CreateStoryRequestDto {
     @NotBlank(message = StoryConstants.TITLE_NOT_BLANK_CONSTRAINT_MESSAGE)
     private String title;
     private String description;
-//    private Set<Genre> genres;
+    private Set<Long> genreIds;
 }

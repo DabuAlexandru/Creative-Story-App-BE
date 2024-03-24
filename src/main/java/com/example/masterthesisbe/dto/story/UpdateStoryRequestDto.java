@@ -1,9 +1,11 @@
 package com.example.masterthesisbe.dto.story;
 
 import com.example.masterthesisbe.constants.StoryConstants;
+import com.example.masterthesisbe.model.Genre;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @ToString
 @Getter
@@ -15,4 +17,6 @@ public class UpdateStoryRequestDto {
     private String title;
 
     private String description;
+
+    private Set<Long> genreIds;
 }

@@ -1,6 +1,7 @@
 package com.example.masterthesisbe.helpers.mappers;
 
 import com.example.masterthesisbe.dto.auth.UserDto;
+import com.example.masterthesisbe.dto.genre.GenreResponseDto;
 import com.example.masterthesisbe.dto.story.CreateStoryRequestDto;
 import com.example.masterthesisbe.dto.story.StoryContentResponseDto;
 import com.example.masterthesisbe.dto.story.StoryResponseDto;
@@ -13,7 +14,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -21,6 +26,7 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class StoryMapper {
     private final UserMapper userMapper;
+    private final GenreMapper genreMapper;
 
     public StoryResponseDto convertToResponseDto(Story story) {
         if (isNull(story)) {
@@ -30,12 +36,19 @@ public class StoryMapper {
         User author = story.getAuthor();
         UserDto convertedAuthor = userMapper.convertToResponseDto(author);
 
+        Set<GenreResponseDto> convertedGenres = Optional.ofNullable(story.getGenres())
+                .map(genres -> genres.stream()
+                        .map(genreMapper::convertToResponseDto)
+                        .collect(Collectors.toSet()))
+                .orElse(Collections.emptySet());
+
         return new StoryResponseDto(
                 story.getId(),
                 story.getTitle(),
                 story.getDescription(),
                 story.getCreatedOn(),
                 story.getLastUpdatedOn(),
+                convertedGenres,
                 convertedAuthor
         );
     }

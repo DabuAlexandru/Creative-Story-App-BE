@@ -1,10 +1,12 @@
 package com.example.masterthesisbe.dto.story;
 
 import com.example.masterthesisbe.dto.auth.UserDto;
+import com.example.masterthesisbe.dto.genre.GenreResponseDto;
 import com.example.masterthesisbe.model.Genre;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.Set;
 
 @ToString
 @Getter
@@ -17,6 +19,6 @@ public class StoryResponseDto {
     private String description;
     private Instant createdOn;
     private Instant lastUpdatedOn;
-//    private Set<Genre> genres;
+    private Set<GenreResponseDto> genres;
     private UserDto author;
 }
