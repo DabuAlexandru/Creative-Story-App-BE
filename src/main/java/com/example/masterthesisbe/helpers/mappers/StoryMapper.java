@@ -79,7 +79,6 @@ public class StoryMapper {
         return new Story(
                 newStory.getTitle(),
                 newStory.getDescription()
-//                newStory.getGenres(),
         );
     }
 

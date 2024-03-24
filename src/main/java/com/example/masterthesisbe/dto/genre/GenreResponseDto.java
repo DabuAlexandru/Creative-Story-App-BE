@@ -10,5 +10,7 @@ import lombok.*;
 public class GenreResponseDto {
     private long id;
     private String name;
-    private String color;
+    private String badgeColor;
+    private String fontColor;
+
 }

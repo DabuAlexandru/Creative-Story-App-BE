@@ -3,14 +3,19 @@ package com.example.masterthesisbe.service;
 import com.example.masterthesisbe.constants.StoryConstants;
 import com.example.masterthesisbe.dto.story.*;
 import com.example.masterthesisbe.helpers.mappers.StoryMapper;
+import com.example.masterthesisbe.model.Genre;
 import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.model.User;
+import com.example.masterthesisbe.repository.GenreRepository;
 import com.example.masterthesisbe.repository.StoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +24,7 @@ public class StoryService {
     private final StoryRepository storyRepository;
     private final StoryMapper storyMapper;
     private final AuthenticationService authService;
+    private final GenreRepository genreRepository;
 
     public Page<StoryResponseDto> getStoriesPaginate(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
@@ -54,7 +60,10 @@ public class StoryService {
         Story convertedStory = storyMapper.convertFromCreateRequestDto(story);
         User loggedInUser = authService.getLoggedInUser();
         convertedStory.setAuthor(loggedInUser);
+
         Story newStory = storyRepository.save(convertedStory);
+        UpdateGenresForStory(newStory, story.getGenreIds());
+
         return storyMapper.convertToResponseDto(newStory);
     }
 
@@ -67,7 +76,19 @@ public class StoryService {
             throw new RuntimeException(StoryConstants.NO_PERMISSIONS_TO_MODIFY);
         }
 
+        UpdateGenresForStory(story, updatedStory.getGenreIds());
+
         storyMapper.updateStoryWithDto(story, updatedStory);
         return this.storyMapper.convertToResponseDto(storyRepository.save(story));
+    }
+
+    private void UpdateGenresForStory(Story story, Set<Integer> genreIds) {
+        Set<Genre> genres = new HashSet<>();
+        for (Integer genreId : genreIds) {
+            Genre genre = genreRepository.findById(genreId)
+                    .orElseThrow(() -> new RuntimeException("Genre not found with id: " + genreId));
+            genres.add(genre);
+        }
+        story.setGenres(genres);
     }
 }

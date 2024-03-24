@@ -11,9 +11,6 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
 
@@ -34,7 +31,8 @@ public class Genre {
     private int id;
 
     private String name;
-    private String color;
+    private String badgeColor;
+    private String fontColor;
 
     @CreationTimestamp
     private Instant createdOn;
@@ -48,8 +46,9 @@ public class Genre {
     @ManyToMany(mappedBy = "genres")
     Set<Story> stories;
 
-    public Genre(String name, String color) {
+    public Genre(String name, String badgeColor, String fontColor) {
         this.name = name;
-        this.color = color;
+        this.badgeColor = badgeColor;
+        this.fontColor = fontColor;
     }
 }

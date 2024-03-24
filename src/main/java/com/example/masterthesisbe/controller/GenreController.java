@@ -3,14 +3,16 @@ package com.example.masterthesisbe.controller;
 import com.example.masterthesisbe.dto.genre.CreateGenreRequestDto;
 import com.example.masterthesisbe.dto.genre.GenreResponseDto;
 import com.example.masterthesisbe.dto.genre.UpdateGenreRequestDto;
+import com.example.masterthesisbe.helpers.handlers.ValidationHandler;
 import com.example.masterthesisbe.service.GenreService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/genre")
-public class GenreController {
+public class GenreController extends ValidationHandler {
     private final GenreService genreService;
 
     public GenreController(GenreService genreService) {
@@ -31,12 +33,12 @@ public class GenreController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<GenreResponseDto> createNewGenre(@RequestBody CreateGenreRequestDto newGenre) {
+    public ResponseEntity<GenreResponseDto> createNewGenre(@Valid @RequestBody CreateGenreRequestDto newGenre) {
         return ResponseEntity.ok().body(this.genreService.createNewGenre(newGenre));
     }
 
     @PutMapping("/update/{genreId}")
-    public ResponseEntity<GenreResponseDto> updateGenre(@PathVariable Integer genreId, @RequestBody UpdateGenreRequestDto updatedGenre) {
+    public ResponseEntity<GenreResponseDto> updateGenre(@PathVariable Integer genreId, @Valid @RequestBody UpdateGenreRequestDto updatedGenre) {
         return ResponseEntity.ok().body(this.genreService.updateGenre(genreId, updatedGenre));
     }
 }

@@ -2,11 +2,15 @@ package com.example.masterthesisbe.dto.story;
 
 import com.example.masterthesisbe.constants.StoryConstants;
 import com.example.masterthesisbe.model.Genre;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.validation.annotation.Validated;
+
 import java.util.Set;
 
+@Validated
 @ToString
 @Getter
 @Setter
@@ -15,8 +19,7 @@ import java.util.Set;
 public class UpdateStoryRequestDto {
     @NotBlank(message = StoryConstants.TITLE_NOT_BLANK_CONSTRAINT_MESSAGE)
     private String title;
-
     private String description;
-
-    private Set<Long> genreIds;
+    @NotNull(message = StoryConstants.GENRES_NOT_NULL_CONSTRAINT_MESSAGE)
+    private Set<Integer> genreIds;
 }

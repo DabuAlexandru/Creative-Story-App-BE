@@ -1,10 +1,10 @@
 package com.example.masterthesisbe.dto.story;
 
-import com.example.masterthesisbe.constants.StoryConstants;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @ToString
 @Getter
 @Setter

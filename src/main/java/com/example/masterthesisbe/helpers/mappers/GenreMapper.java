@@ -21,7 +21,8 @@ public class GenreMapper {
         return new GenreResponseDto(
                 genre.getId(),
                 genre.getName(),
-                genre.getColor()
+                genre.getBadgeColor(),
+                genre.getFontColor()
         );
     }
 
@@ -32,12 +33,14 @@ public class GenreMapper {
 
         return new Genre(
                 newGenre.getName(),
-                newGenre.getColor()
+                newGenre.getBadgeColor(),
+                newGenre.getFontColor()
         );
     }
 
     public void updateGenreWithDto(Genre genre, UpdateGenreRequestDto genreDto) {
         genre.setName(genreDto.getName());
-        genre.setColor(genreDto.getColor());
+        genre.setBadgeColor(genreDto.getBadgeColor());
+        genre.setFontColor(genreDto.getFontColor());
     }
 }
