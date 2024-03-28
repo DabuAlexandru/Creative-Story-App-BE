@@ -7,6 +7,7 @@ import com.example.masterthesisbe.dto.story.StoryResponseDto;
 import com.example.masterthesisbe.dto.story.UpdateStoryRequestDto;
 import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.service.StoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +17,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/story")
+@RequiredArgsConstructor
 public class StoryController {
     private final StoryService storyService;
-
-    public StoryController(StoryService storyService) {
-        this.storyService = storyService;
-    }
 
     @GetMapping("/getAll")
     public ResponseEntity<Page<StoryResponseDto>> retrieveAllStories(

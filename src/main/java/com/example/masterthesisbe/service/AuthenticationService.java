@@ -9,13 +9,13 @@ import com.example.masterthesisbe.exception.IncorrectCredentials;
 import com.example.masterthesisbe.helpers.mappers.UserMapper;
 import com.example.masterthesisbe.model.Role;
 import com.example.masterthesisbe.model.User;
+import com.example.masterthesisbe.model.UserProfile;
+import com.example.masterthesisbe.repository.UserProfileRepository;
 import com.example.masterthesisbe.repository.UserRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +30,13 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
+    private final UserProfileRepository userProfileRepository;
+
+    private void createUserProfile(User user) {
+        UserProfile newUserProfile = new UserProfile();
+        newUserProfile.setUser(user);
+        userProfileRepository.save(newUserProfile);
+    }
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
@@ -39,6 +46,8 @@ public class AuthenticationService {
                 .role(Role.USER)
                 .build();
         userRepository.save(user);
+        this.createUserProfile(user);
+
         UserDto userResponse = userMapper.convertToResponseDto(user);
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()

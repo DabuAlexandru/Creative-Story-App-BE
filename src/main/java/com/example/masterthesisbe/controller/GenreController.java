@@ -6,18 +6,16 @@ import com.example.masterthesisbe.dto.genre.UpdateGenreRequestDto;
 import com.example.masterthesisbe.helpers.handlers.ValidationHandler;
 import com.example.masterthesisbe.service.GenreService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/genre")
+@RequiredArgsConstructor
 public class GenreController extends ValidationHandler {
     private final GenreService genreService;
-
-    public GenreController(GenreService genreService) {
-        this.genreService = genreService;
-    }
 
     @GetMapping("/getAll")
     public ResponseEntity<Page<GenreResponseDto>> retrieveAllGenres(
