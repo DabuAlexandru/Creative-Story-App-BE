@@ -4,6 +4,7 @@ import com.example.masterthesisbe.constants.GenreConstants;
 import com.example.masterthesisbe.dto.genre.CreateGenreRequestDto;
 import com.example.masterthesisbe.dto.genre.GenreResponseDto;
 import com.example.masterthesisbe.dto.genre.UpdateGenreRequestDto;
+import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.GenreMapper;
 import com.example.masterthesisbe.model.Genre;
 import com.example.masterthesisbe.repository.GenreRepository;
@@ -33,7 +34,7 @@ public class GenreService {
 
     public GenreResponseDto getGenreById(Integer genreId) {
         Genre foundGenre = this.genreRepository.findById(genreId)
-                .orElseThrow(() -> new RuntimeException(GenreConstants.GENRE_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new ApiException(GenreConstants.GENRE_NOT_FOUND_MESSAGE));
         return genreMapper.convertToResponseDto(foundGenre);
     }
 
@@ -45,7 +46,7 @@ public class GenreService {
 
     public GenreResponseDto updateGenre(Integer genreId, UpdateGenreRequestDto updatedGenre) {
         Genre genre = this.genreRepository.findById(genreId)
-                .orElseThrow(() -> new RuntimeException(GenreConstants.GENRE_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new ApiException(GenreConstants.GENRE_NOT_FOUND_MESSAGE));
 
         genreMapper.updateGenreWithDto(genre, updatedGenre);
         return this.genreMapper.convertToResponseDto(genreRepository.save(genre));

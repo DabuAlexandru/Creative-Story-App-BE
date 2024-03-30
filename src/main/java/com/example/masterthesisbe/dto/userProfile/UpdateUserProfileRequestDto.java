@@ -1,4 +1,4 @@
-package com.example.masterthesisbe.dto.story;
+package com.example.masterthesisbe.dto.userProfile;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserProfileResponseDto {
+public class UpdateUserProfileRequestDto {
     private String fullName;
     private String bio;
     private String location;

@@ -1,10 +1,12 @@
 package com.example.masterthesisbe.service;
 
 import com.example.masterthesisbe.config.JwtService;
+import com.example.masterthesisbe.constants.UserProfileConstants;
 import com.example.masterthesisbe.dto.auth.AuthenticationRequest;
 import com.example.masterthesisbe.dto.auth.AuthenticationResponse;
 import com.example.masterthesisbe.dto.auth.RegisterRequest;
 import com.example.masterthesisbe.dto.auth.UserDto;
+import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.exception.IncorrectCredentials;
 import com.example.masterthesisbe.helpers.mappers.UserMapper;
 import com.example.masterthesisbe.model.Role;
@@ -78,9 +80,16 @@ public class AuthenticationService {
         if (authentication != null && authentication.isAuthenticated()) {
             String email = authentication.getName(); // Assuming email is used as the principal
             return userRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseThrow(() -> new ApiException("User not found"));
         } else {
-            throw new RuntimeException("User not authenticated"); // Handle appropriately
+            throw new ApiException("User not authenticated"); // Handle appropriately
         }
+    }
+
+    public UserProfile getCurrentUserProfile() {
+        User loggedInUser = this.getLoggedInUser();
+        int userId = loggedInUser.getId();
+        return this.userProfileRepository.findByUserId(userId)
+                .orElseThrow(() -> new ApiException(UserProfileConstants.USER_PROFILE_NOT_FOUND_MESSAGE));
     }
 }

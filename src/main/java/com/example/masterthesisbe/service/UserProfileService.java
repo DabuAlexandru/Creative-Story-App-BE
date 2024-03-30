@@ -1,37 +1,95 @@
 package com.example.masterthesisbe.service;
 
-import com.example.masterthesisbe.constants.UserProfileConstants;
-import com.example.masterthesisbe.dto.story.UpdateUserProfileRequestDto;
-import com.example.masterthesisbe.dto.story.UserProfileResponseDto;
+import com.example.masterthesisbe.dto.userProfile.*;
+import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.UserProfileMapper;
-import com.example.masterthesisbe.model.User;
-import com.example.masterthesisbe.model.UserProfile;
+import com.example.masterthesisbe.model.*;
+import com.example.masterthesisbe.repository.StoryFavoriteRepository;
+import com.example.masterthesisbe.repository.StoryReadLaterRepository;
+import com.example.masterthesisbe.repository.StoryRepository;
 import com.example.masterthesisbe.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
+    private final StoryRepository storyRepository;
+    private final StoryFavoriteRepository storyFavoriteRepository;
+    private final StoryReadLaterRepository storyReadLaterRepository;
+
     private final UserProfileMapper userProfileMapper;
     private final AuthenticationService authService;
 
     public UserProfileResponseDto getProfileOfUser() {
-        User loggedInUser = authService.getLoggedInUser();
-        int userId = loggedInUser.getId();
-        UserProfile foundUserProfile = this.userProfileRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException(UserProfileConstants.USER_PROFILE_NOT_FOUND_MESSAGE));
-        return userProfileMapper.convertToResponseDto(foundUserProfile);
+        UserProfile userProfile = authService.getCurrentUserProfile();
+        Set<StoryFavoriteResponseDto> favorites = storyFavoriteRepository.findByUserProfileId(userProfile.getId()).stream()
+                .map(f -> new StoryFavoriteResponseDto(f.getStory().getId(), f.getCreatedOn()))
+                .collect(Collectors.toSet());
+
+        Set<StoryReadLaterResponseDto> readLater = storyReadLaterRepository.findByUserProfileId(userProfile.getId()).stream()
+                .map(f -> new StoryReadLaterResponseDto(f.getStory().getId(), f.getCreatedOn()))
+                .collect(Collectors.toSet());
+
+        UserProfileResponseDto response = userProfileMapper.convertToResponseDto(userProfile);
+        response.setFavorites(favorites);
+        response.setReadingLists(readLater);
+
+        return response;
+    }
+
+    public UserProfileReducedResponseDto getReducedProfileOfUser() {
+        UserProfile userProfile = authService.getCurrentUserProfile();
+        return userProfileMapper.convertToReducedResponseDto(userProfile);
     }
 
     public UserProfileResponseDto updateUserProfile(UpdateUserProfileRequestDto updatedUserProfile) {
-        User loggedInUser = authService.getLoggedInUser();
-        int userId = loggedInUser.getId();
-        UserProfile foundUserProfile = this.userProfileRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException(UserProfileConstants.NO_PERMISSIONS_TO_MODIFY));
+        UserProfile userProfile = authService.getCurrentUserProfile();
+        userProfileMapper.updateUserProfileWithDto(userProfile, updatedUserProfile);
+        return this.userProfileMapper.convertToResponseDto(userProfileRepository.save(userProfile));
+    }
 
-        userProfileMapper.updateUserProfileWithDto(foundUserProfile, updatedUserProfile);
-        return this.userProfileMapper.convertToResponseDto(userProfileRepository.save(foundUserProfile));
+    public void addStoryToFavorites(int storyId) {
+        UserProfile userProfile = authService.getCurrentUserProfile();
+        if (storyFavoriteRepository.existsByUserProfileIdAndStoryId(userProfile.getId(), storyId)) {
+           throw new ApiException("Story with id " + storyId + " already added!");
+        }
+        Story story = storyRepository.findById(storyId)
+                .orElseThrow(() -> new ApiException("There is no story with id: " + storyId));
+
+        StoryFavorite newFavorite = new StoryFavorite(story, userProfile);
+        storyFavoriteRepository.save(newFavorite);
+    }
+
+    public void removeStoryFromFavorites(int storyId) {
+        UserProfile userProfile = authService.getCurrentUserProfile();
+        Long deletedCount = storyFavoriteRepository.deleteByUserProfileIdAndStoryId(userProfile.getId(), storyId);
+        if (deletedCount == 0) {
+            throw new ApiException("There is no story with id: " + storyId);
+        }
+    }
+
+    public void addStoryToReadLater(int storyId) {
+        UserProfile userProfile = authService.getCurrentUserProfile();
+        if (storyReadLaterRepository.existsByUserProfileIdAndStoryId(userProfile.getId(), storyId)) {
+            throw new ApiException("Story with id " + storyId + " already added!");
+        }
+        Story story = storyRepository.findById(storyId)
+                .orElseThrow(() -> new ApiException("There is no story with id: " + storyId));
+
+        StoryReadLater storyForReadLater = new StoryReadLater(story, userProfile);
+        storyReadLaterRepository.save(storyForReadLater);
+    }
+
+    public void removeStoryFromReadLater(int storyId) {
+        UserProfile userProfile = authService.getCurrentUserProfile();
+        Long deletedCount = storyReadLaterRepository.deleteByUserProfileIdAndStoryId(userProfile.getId(), storyId);
+        if (deletedCount == 0) {
+            throw new ApiException("There is no story with id: " + storyId);
+        }
     }
 }
