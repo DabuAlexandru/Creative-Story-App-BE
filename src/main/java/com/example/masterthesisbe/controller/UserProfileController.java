@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/userProfile")
@@ -53,5 +54,17 @@ public class UserProfileController extends ValidationHandler {
     public ResponseEntity<Void> removeStoryFromReadLater(@PathVariable int storyId) {
         this.userProfileService.removeStoryFromReadLater(storyId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/updatePicture")
+    public ResponseEntity<String> uploadProfilePicture(@RequestParam("file") MultipartFile file) {
+        this.userProfileService.uploadProfilePicture(file);
+        return ResponseEntity.ok().body("You successfully uploaded your new profile picture!");
+    }
+
+    @PostMapping("/deletePicture")
+    public ResponseEntity<String> deleteProfilePicture() {
+        this.userProfileService.deleteProfilePicture();
+        return ResponseEntity.ok().body("You successfully deleted your profile picture!");
     }
 }

@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
@@ -26,6 +24,11 @@ public class FileInstance {
     private int id;
 
     private String fileName;
+
+    public FileInstance(String fileName, User user) {
+        this.fileName = fileName;
+        this.user = user;
+    }
 
     @ManyToOne
     @JoinColumn(name="user_id")

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import static java.util.Objects.isNull;
 
 @Component
-@RequiredArgsConstructor
 public class GenreMapper {
 
     public GenreResponseDto convertToResponseDto(Genre genre) {

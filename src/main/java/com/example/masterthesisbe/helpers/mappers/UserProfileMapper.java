@@ -1,5 +1,6 @@
 package com.example.masterthesisbe.helpers.mappers;
 
+import com.example.masterthesisbe.dto.fileInstance.FileInstanceResponseDto;
 import com.example.masterthesisbe.dto.userProfile.*;
 import com.example.masterthesisbe.model.UserProfile;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import static java.util.Objects.isNull;
 @Component
 @RequiredArgsConstructor
 public class UserProfileMapper {
+    private final FileInstanceMapper fileInstanceMapper;
 
     public UserProfileResponseDto convertToResponseDto(UserProfile userProfile) {
         if (isNull(userProfile)) {
@@ -31,13 +33,19 @@ public class UserProfileMapper {
                         s.getCreatedOn()
                 )).collect(Collectors.toSet());
 
+        var profilePicture = userProfile.getProfilePicture();
+        FileInstanceResponseDto convertedProfilePicture = profilePicture != null
+                ? fileInstanceMapper.convertToResponseDto(profilePicture)
+                : null;
+
         return new UserProfileResponseDto(
                 userProfile.getFullName(),
                 userProfile.getBio(),
                 userProfile.getLocation(),
                 userProfile.getWebsite(),
                 convertedFavorites,
-                convertedReadingLists
+                convertedReadingLists,
+                convertedProfilePicture
         );
     }
 

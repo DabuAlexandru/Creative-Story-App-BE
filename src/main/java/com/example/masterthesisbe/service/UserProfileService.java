@@ -4,12 +4,10 @@ import com.example.masterthesisbe.dto.userProfile.*;
 import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.UserProfileMapper;
 import com.example.masterthesisbe.model.*;
-import com.example.masterthesisbe.repository.StoryFavoriteRepository;
-import com.example.masterthesisbe.repository.StoryReadLaterRepository;
-import com.example.masterthesisbe.repository.StoryRepository;
-import com.example.masterthesisbe.repository.UserProfileRepository;
+import com.example.masterthesisbe.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -21,9 +19,11 @@ public class UserProfileService {
     private final StoryRepository storyRepository;
     private final StoryFavoriteRepository storyFavoriteRepository;
     private final StoryReadLaterRepository storyReadLaterRepository;
+    private final FileInstanceRepository fileInstanceRepository;
 
     private final UserProfileMapper userProfileMapper;
     private final AuthenticationService authService;
+    private final FileInstanceService fileInstanceService;
 
     public UserProfileResponseDto getProfileOfUser() {
         UserProfile userProfile = authService.getCurrentUserProfile();
@@ -91,5 +91,32 @@ public class UserProfileService {
         if (deletedCount == 0) {
             throw new ApiException("There is no story with id: " + storyId);
         }
+    }
+
+    public void uploadProfilePicture(MultipartFile picture) {
+        UserProfile userProfile = authService.getCurrentUserProfile();
+        // at the moment for testing purposes I will only hold one picture at a time for a user
+        FileInstance profilePicture = userProfile.getProfilePicture();
+        if (profilePicture != null) {
+            userProfile.setProfilePicture(null);
+            fileInstanceService.deleteFile(profilePicture.getFileName());
+            fileInstanceRepository.delete(profilePicture);
+        }
+
+        FileInstance newProfilePicture = fileInstanceService.userUploadFile(picture);
+        userProfile.setProfilePicture(newProfilePicture);
+        userProfileRepository.save(userProfile);
+    }
+
+    public void deleteProfilePicture() {
+        UserProfile userProfile = authService.getCurrentUserProfile();
+        FileInstance profilePicture = userProfile.getProfilePicture();
+        if(userProfile.getProfilePicture() == null) {
+            throw new ApiException("There is no saved profile picture for the current user!");
+        }
+        userProfile.setProfilePicture(null);
+        fileInstanceService.deleteFile(profilePicture.getFileName());
+        fileInstanceRepository.delete(profilePicture);
+        userProfileRepository.save(userProfile);
     }
 }

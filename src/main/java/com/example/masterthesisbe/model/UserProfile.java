@@ -25,8 +25,12 @@ public class UserProfile {
     private String location;
     private String website;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OneToOne
+    @JoinColumn(name = "profile_picture_id")
+    private FileInstance profilePicture;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)

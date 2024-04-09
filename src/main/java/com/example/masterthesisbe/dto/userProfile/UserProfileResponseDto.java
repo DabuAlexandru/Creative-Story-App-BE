@@ -1,5 +1,6 @@
 package com.example.masterthesisbe.dto.userProfile;
 
+import com.example.masterthesisbe.dto.fileInstance.FileInstanceResponseDto;
 import lombok.*;
 
 import java.util.Set;
@@ -16,4 +17,5 @@ public class UserProfileResponseDto {
     private String website;
     private Set<StoryFavoriteResponseDto> favorites;
     private Set<StoryReadLaterResponseDto> readingLists;
+    private FileInstanceResponseDto profilePicture;
 }
