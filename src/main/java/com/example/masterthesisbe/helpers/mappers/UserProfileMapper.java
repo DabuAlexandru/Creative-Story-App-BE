@@ -76,6 +76,6 @@ public class UserProfileMapper {
         userProfile.setFullName(userProfileDto.getFullName());
         userProfile.setBio(userProfileDto.getBio());
         userProfile.setLocation(userProfileDto.getLocation());
-        userProfile.setWebsite(userProfile.getWebsite());
+        userProfile.setWebsite(userProfileDto.getWebsite());
     }
 }
