@@ -1,8 +1,9 @@
 package com.example.masterthesisbe.dto.story;
 
-import com.example.masterthesisbe.dto.auth.UserDto;
 import com.example.masterthesisbe.dto.genre.GenreResponseDto;
-import com.example.masterthesisbe.model.Genre;
+import com.example.masterthesisbe.dto.userProfile.UserProfileReferenceResponseDto;
+import com.example.masterthesisbe.dto.userProfile.UserProfileResponseDto;
+import com.example.masterthesisbe.model.StoryOverallScore;
 import lombok.*;
 
 import java.time.Instant;
@@ -17,8 +18,13 @@ public class StoryResponseDto {
     private long id;
     private String title;
     private String description;
+    private StoryOverallScoreResponseDto storyOverallScore;
+
+    // temporary modification
+    private String content;
+
     private Instant createdOn;
     private Instant lastUpdatedOn;
     private Set<GenreResponseDto> genres;
-    private UserDto author;
+    private UserProfileReferenceResponseDto author;
 }

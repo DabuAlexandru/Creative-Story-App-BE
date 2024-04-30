@@ -20,6 +20,8 @@ public class UserProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private String penName;
+    private String headline;
     private String fullName;
     private String bio;
     private String location;

@@ -34,21 +34,21 @@ public class AuthenticationService {
     private final UserMapper userMapper;
     private final UserProfileRepository userProfileRepository;
 
-    private void createUserProfile(User user) {
+    private void createUserProfile(User user, String penName) {
         UserProfile newUserProfile = new UserProfile();
         newUserProfile.setUser(user);
+        newUserProfile.setPenName(penName);
         userProfileRepository.save(newUserProfile);
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
-                .penName(request.getPenName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
         userRepository.save(user);
-        this.createUserProfile(user);
+        this.createUserProfile(user, request.getPenName());
 
         UserDto userResponse = userMapper.convertToResponseDto(user);
         var jwtToken = jwtService.generateToken(user);

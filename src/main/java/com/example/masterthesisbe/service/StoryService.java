@@ -7,6 +7,7 @@ import com.example.masterthesisbe.helpers.mappers.StoryMapper;
 import com.example.masterthesisbe.model.Genre;
 import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.model.User;
+import com.example.masterthesisbe.model.UserProfile;
 import com.example.masterthesisbe.repository.GenreRepository;
 import com.example.masterthesisbe.repository.StoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -58,8 +59,8 @@ public class StoryService {
 
     public StoryResponseDto createNewStory(CreateStoryRequestDto story) {
         Story convertedStory = storyMapper.convertFromCreateRequestDto(story);
-        User loggedInUser = authService.getLoggedInUser();
-        convertedStory.setAuthor(loggedInUser);
+        UserProfile author = authService.getCurrentUserProfile();
+        convertedStory.setAuthor(author);
 
         Story newStory = storyRepository.save(convertedStory);
         UpdateGenresForStory(newStory, story.getGenreIds());
@@ -72,7 +73,7 @@ public class StoryService {
                 .orElseThrow(() -> new ApiException(StoryConstants.STORY_NOT_FOUND_MESSAGE));
 
         User loggedInUser = authService.getLoggedInUser();
-        if(loggedInUser.getId() != story.getAuthor().getId()) {
+        if(loggedInUser.getId() != story.getAuthor().getUser().getId()) {
             throw new ApiException(StoryConstants.NO_PERMISSIONS_TO_MODIFY);
         }
 

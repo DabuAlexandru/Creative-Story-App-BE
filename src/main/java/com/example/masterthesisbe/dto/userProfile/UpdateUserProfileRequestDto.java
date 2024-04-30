@@ -8,6 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateUserProfileRequestDto {
+    private String penName;
+    private String headline;
     private String fullName;
     private String bio;
     private String location;

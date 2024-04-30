@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("api/userProfile")
+@RequestMapping("api/user-profile")
 @RequiredArgsConstructor
 public class UserProfileController extends ValidationHandler {
     private final UserProfileService userProfileService;
@@ -44,25 +44,25 @@ public class UserProfileController extends ValidationHandler {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/readLater/add/{storyId}")
+    @PutMapping("/read-later/add/{storyId}")
     public ResponseEntity<Void> addStoryToReadLater(@PathVariable int storyId) {
         this.userProfileService.addStoryToReadLater(storyId);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/readLater/remove/{storyId}")
+    @PutMapping("/read-later/remove/{storyId}")
     public ResponseEntity<Void> removeStoryFromReadLater(@PathVariable int storyId) {
         this.userProfileService.removeStoryFromReadLater(storyId);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/updatePicture")
+    @PostMapping("/update-picture")
     public ResponseEntity<String> uploadProfilePicture(@RequestParam("file") MultipartFile file) {
         this.userProfileService.uploadProfilePicture(file);
         return ResponseEntity.ok().body("You successfully uploaded your new profile picture!");
     }
 
-    @PostMapping("/deletePicture")
+    @PostMapping("/delete-picture")
     public ResponseEntity<String> deleteProfilePicture() {
         this.userProfileService.deleteProfilePicture();
         return ResponseEntity.ok().body("You successfully deleted your profile picture!");

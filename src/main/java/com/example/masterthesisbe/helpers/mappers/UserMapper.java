@@ -15,7 +15,6 @@ public class UserMapper {
 
         return new UserDto(
             user.getId(),
-            user.getPenName(),
             user.getEmail(),
             user.getRole()
         );

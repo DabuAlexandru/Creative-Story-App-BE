@@ -43,11 +43,16 @@ public class Story {
     private Set<Genre> genres;
 
     // temporary integration - will be replaced
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne
     @JoinColumn(name="author_id")
-    private User author;
+    private UserProfile author;
+
+    @OneToOne
+    @JoinColumn(name = "story_overall_score_id")
+    private StoryOverallScore storyOverallScore;
 
     public Story(String title, String description) {
         this.title = title;

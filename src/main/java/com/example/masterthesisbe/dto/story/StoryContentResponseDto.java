@@ -1,7 +1,7 @@
 package com.example.masterthesisbe.dto.story;
 
-import com.example.masterthesisbe.dto.auth.UserDto;
-import com.example.masterthesisbe.model.Genre;
+import com.example.masterthesisbe.dto.userProfile.UserProfileReferenceResponseDto;
+import com.example.masterthesisbe.dto.userProfile.UserProfileResponseDto;
 import lombok.*;
 
 import java.time.Instant;
@@ -18,5 +18,5 @@ public class StoryContentResponseDto {
     private Instant createdOn;
     private Instant lastUpdatedOn;
 //    private Set<Genre> genres;
-    private UserDto author;
+    private UserProfileReferenceResponseDto author;
 }

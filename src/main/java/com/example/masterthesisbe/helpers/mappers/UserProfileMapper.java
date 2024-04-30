@@ -39,6 +39,9 @@ public class UserProfileMapper {
                 : null;
 
         return new UserProfileResponseDto(
+                userProfile.getId(),
+                userProfile.getPenName(),
+                userProfile.getHeadline(),
                 userProfile.getFullName(),
                 userProfile.getBio(),
                 userProfile.getLocation(),
@@ -63,6 +66,9 @@ public class UserProfileMapper {
                 .collect(Collectors.toSet());
 
         return new UserProfileReducedResponseDto(
+                userProfile.getId(),
+                userProfile.getPenName(),
+                userProfile.getHeadline(),
                 userProfile.getFullName(),
                 userProfile.getBio(),
                 userProfile.getLocation(),
@@ -72,7 +78,29 @@ public class UserProfileMapper {
         );
     }
 
+    public UserProfileReferenceResponseDto convertToReferenceResponseDto(UserProfile userProfile) {
+        if (isNull(userProfile)) {
+            return null;
+        }
+
+        var profilePicture = userProfile.getProfilePicture();
+        FileInstanceResponseDto convertedProfilePicture = profilePicture != null
+                ? fileInstanceMapper.convertToResponseDto(profilePicture)
+                : null;
+
+        return new UserProfileReferenceResponseDto(
+                userProfile.getId(),
+                userProfile.getPenName(),
+                userProfile.getHeadline(),
+                userProfile.getFullName(),
+                userProfile.getBio(),
+                convertedProfilePicture
+        );
+    }
+
     public void updateUserProfileWithDto(UserProfile userProfile, UpdateUserProfileRequestDto userProfileDto) {
+        userProfile.setPenName(userProfileDto.getPenName());
+        userProfile.setHeadline(userProfileDto.getHeadline());
         userProfile.setFullName(userProfileDto.getFullName());
         userProfile.setBio(userProfileDto.getBio());
         userProfile.setLocation(userProfileDto.getLocation());

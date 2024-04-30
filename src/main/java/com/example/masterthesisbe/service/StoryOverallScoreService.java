@@ -1,0 +1,88 @@
+package com.example.masterthesisbe.service;
+
+import com.example.masterthesisbe.model.Story;
+import com.example.masterthesisbe.model.StoryOverallScore;
+import com.example.masterthesisbe.model.StoryReview;
+import com.example.masterthesisbe.repository.StoryOverallScoreRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class StoryOverallScoreService {
+    private final StoryOverallScoreRepository storyOverallScoreRepository;
+
+    private double getScoreWithNew(double overallScore, int numOfReviews, int newRating) {
+        return ((overallScore * numOfReviews) + newRating) / (numOfReviews + 1.0);
+    }
+
+    private double getScoreWithRemoved(double overallScore, int numOfReviews, int oldRating) {
+        return ((overallScore * numOfReviews) - oldRating) / (numOfReviews - 1.0);
+    }
+
+    public void addScoreToStory(int storyId, StoryReview newReview) {
+        StoryOverallScore storyScore = storyOverallScoreRepository.findFirstByStoryId(storyId);
+        if (storyScore == null) {
+            return;
+        }
+
+        int numOfReviews = storyScore.getNumOfReviews();
+
+        double oldCharacterScore = storyScore.getCharacterScore();
+        double newCharacterScore = getScoreWithNew(oldCharacterScore, numOfReviews, newReview.getCharacterScore());
+        storyScore.setCharacterScore(newCharacterScore);
+
+        double oldConflictScore = storyScore.getConflictScore();
+        double newConflictScore = getScoreWithNew(oldConflictScore, numOfReviews, newReview.getConflictScore());
+        storyScore.setConflictScore(newConflictScore);
+
+        double oldPlotScore = storyScore.getPlotScore();
+        double newPlotScore = getScoreWithNew(oldPlotScore, numOfReviews, newReview.getPlotScore());
+        storyScore.setPlotScore(newPlotScore);
+
+        double oldSettingScore = storyScore.getSettingScore();
+        double newSettingScore = getScoreWithNew(oldSettingScore, numOfReviews, newReview.getSettingScore());
+        storyScore.setSettingScore(newSettingScore);
+
+        double oldThemeScore = storyScore.getThemeScore();
+        double newThemeScore = getScoreWithNew(oldThemeScore, numOfReviews, newReview.getThemeScore());
+        storyScore.setThemeScore(newThemeScore);
+
+        storyScore.setNumOfReviews(numOfReviews + 1);
+
+        storyOverallScoreRepository.save(storyScore);
+    }
+
+    public void removeScoreFromStory(int storyId, StoryReview oldReview) {
+        StoryOverallScore storyScore = storyOverallScoreRepository.findFirstByStoryId(storyId);
+        if (storyScore == null || storyScore.getNumOfReviews() == 0) {
+            return;
+        }
+
+        int numOfReviews = storyScore.getNumOfReviews();
+
+        double oldCharacterScore = storyScore.getCharacterScore();
+        double newCharacterScore = getScoreWithRemoved(oldCharacterScore, numOfReviews, oldReview.getCharacterScore());
+        storyScore.setCharacterScore(newCharacterScore);
+
+        double oldConflictScore = storyScore.getConflictScore();
+        double newConflictScore = getScoreWithRemoved(oldConflictScore, numOfReviews, oldReview.getConflictScore());
+        storyScore.setConflictScore(newConflictScore);
+
+        double oldPlotScore = storyScore.getPlotScore();
+        double newPlotScore = getScoreWithRemoved(oldPlotScore, numOfReviews, oldReview.getPlotScore());
+        storyScore.setPlotScore(newPlotScore);
+
+        double oldSettingScore = storyScore.getSettingScore();
+        double newSettingScore = getScoreWithRemoved(oldSettingScore, numOfReviews, oldReview.getSettingScore());
+        storyScore.setSettingScore(newSettingScore);
+
+        double oldThemeScore = storyScore.getThemeScore();
+        double newThemeScore = getScoreWithRemoved(oldThemeScore, numOfReviews, oldReview.getThemeScore());
+        storyScore.setThemeScore(newThemeScore);
+
+        storyScore.setNumOfReviews(numOfReviews - 1);
+
+        storyOverallScoreRepository.save(storyScore);
+    }
+}

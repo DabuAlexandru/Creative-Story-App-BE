@@ -10,15 +10,11 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserProfileResponseDto {
+public class UserProfileReferenceResponseDto {
     private int id;
     private String penName;
     private String headline;
     private String fullName;
     private String bio;
-    private String location;
-    private String website;
-    private Set<StoryFavoriteResponseDto> favorites;
-    private Set<StoryReadLaterResponseDto> readingLists;
     private FileInstanceResponseDto profilePicture;
 }

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class StoryController {
     private final StoryService storyService;
 
-    @GetMapping("/getAll")
+    @GetMapping("/get-all")
     public ResponseEntity<Page<StoryResponseDto>> retrieveAllStories(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -29,7 +29,7 @@ public class StoryController {
         return ResponseEntity.ok().body(this.storyService.getStoriesPaginate(page, size, sortBy));
     }
 
-    @GetMapping("/ofAuthor/{authorId}")
+    @GetMapping("/of-author/{authorId}")
     public ResponseEntity<List<StoryResponseDto>> retrieveStoriesForAuthor(@PathVariable Integer authorId) {
         return ResponseEntity.ok().body(this.storyService.getAllStoriesOfAuthor(authorId));
     }
