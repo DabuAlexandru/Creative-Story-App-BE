@@ -31,4 +31,9 @@ public class SectionNote {
 	@ManyToOne
 	@JoinColumn(name = "section_id")
 	private Section section;
+
+	public SectionNote(String title, String content) {
+		this.title = title;
+		this.content = content;
+	}
 }
