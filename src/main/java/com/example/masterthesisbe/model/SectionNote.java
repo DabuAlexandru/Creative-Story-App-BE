@@ -13,12 +13,14 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "paragraph")
-public class Paragraph {
+@Table(name = "section")
+public class SectionNote {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+
+	private String title;
 
 	@Column(columnDefinition = "TEXT")
 	private String content;

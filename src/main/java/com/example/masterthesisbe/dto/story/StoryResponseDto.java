@@ -20,8 +20,7 @@ public class StoryResponseDto {
     private String description;
     private StoryOverallScoreResponseDto storyOverallScore;
 
-    // temporary modification
-    private String content;
+    private String preview;
 
     private Instant createdOn;
     private Instant lastUpdatedOn;

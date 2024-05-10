@@ -44,10 +44,11 @@ public class StoryMapper {
                 story.getTitle(),
                 story.getDescription(),
                 overallScore,
-                story.getContent(),
+                story.getPreview(),
                 story.getCreatedOn(),
                 story.getLastUpdatedOn(),
                 convertedGenres,
+
                 convertedAuthor
         );
     }
@@ -63,7 +64,7 @@ public class StoryMapper {
         return new StoryContentResponseDto(
                 story.getId(),
                 story.getTitle(),
-                story.getContent(),
+                story.getPreview(),
                 story.getCreatedOn(),
                 story.getLastUpdatedOn(),
                 convertedAuthor

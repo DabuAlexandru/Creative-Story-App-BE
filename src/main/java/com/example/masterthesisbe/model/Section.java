@@ -13,20 +13,34 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "paragraph")
-public class Paragraph {
+@Table(name = "section",
+		uniqueConstraints = {
+		@UniqueConstraint(name = "SectionTitleStoryUnique", columnNames = {"storyId", "title"})
+})
+public class Section {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
+	private String title;
+
 	@Column(columnDefinition = "TEXT")
-	private String content;
+	private String summary;
 
 	private Timestamp creationDate;
 	private Timestamp lastModifiedDate;
 
 	@ManyToOne
-	@JoinColumn(name = "section_id")
-	private Section section;
+	@JoinColumn(name = "story_id")
+	private Story story;
+
+	// temporary
+	@Column(columnDefinition = "TEXT")
+	private String content;
+
+	public Section(String title, String summary) {
+		this.title = title;
+		this.summary = summary;
+	}
 }

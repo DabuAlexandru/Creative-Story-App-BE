@@ -42,9 +42,8 @@ public class Story {
     )
     private Set<Genre> genres;
 
-    // temporary integration - will be replaced
     @Column(columnDefinition = "TEXT")
-    private String content;
+    private String preview;
 
     @ManyToOne
     @JoinColumn(name="author_id")
