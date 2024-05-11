@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
@@ -13,7 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "section")
+@Table(name = "sectionNote")
 public class SectionNote {
 
 	@Id
@@ -25,7 +27,9 @@ public class SectionNote {
 	@Column(columnDefinition = "TEXT")
 	private String content;
 
+	@CreationTimestamp
 	private Timestamp creationDate;
+	@UpdateTimestamp
 	private Timestamp lastModifiedDate;
 
 	@ManyToOne
