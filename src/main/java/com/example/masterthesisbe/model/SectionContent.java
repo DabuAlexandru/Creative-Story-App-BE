@@ -15,34 +15,27 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "section",
-		uniqueConstraints = {
-			@UniqueConstraint(name = "SectionTitleStoryUnique", columnNames = {"storyId", "title"})
-})
-public class Section {
+@Table(name = "sectionContent")
+public class SectionContent {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	private String title;
-
-	private int displayOrder;
+	// temporary
+	@Column(columnDefinition = "TEXT")
+	private String content;
 
 	@CreationTimestamp
 	private Timestamp creationDate;
 	@UpdateTimestamp
 	private Timestamp lastModifiedDate;
 
-	@ManyToOne
-	@JoinColumn(name = "story_id")
-	private Story story;
-
 	@OneToOne
-	@JoinColumn(name = "section_content_id")
-	private SectionContent sectionContent;
+	@JoinColumn(name = "section_id")
+	private Section section;
 
-	public Section(String title) {
-		this.title = title;
+	public SectionContent(String content) {
+		this.content = content;
 	}
 }

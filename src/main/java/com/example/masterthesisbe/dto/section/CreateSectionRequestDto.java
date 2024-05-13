@@ -14,6 +14,4 @@ import lombok.NoArgsConstructor;
 public class CreateSectionRequestDto {
     @NotBlank(message = SectionConstants.TITLE_NOT_BLANK_CONSTRAINT_MESSAGE)
     private String title;
-
-    private String summary;
 }

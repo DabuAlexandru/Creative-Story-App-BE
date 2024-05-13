@@ -15,7 +15,7 @@ import java.time.Instant;
 public class SectionResponseDto {
     private int id;
     private String title;
-    private String summary;
+    private int displayOrder;
     private Timestamp createdOn;
     private Timestamp lastUpdatedOn;
 }

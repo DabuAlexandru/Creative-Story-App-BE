@@ -20,20 +20,9 @@ public class SectionMapper {
         return new SectionResponseDto(
                 section.getId(),
                 section.getTitle(),
-                section.getSummary(),
+                section.getDisplayOrder(),
                 section.getCreationDate(),
                 section.getLastModifiedDate()
-        );
-    }
-
-    public SectionContentResponseDto convertToContentResponseDto(Section section) {
-        if (isNull(section)) {
-            return null;
-        }
-
-        return new SectionContentResponseDto(
-                section.getId(),
-                section.getContent()
         );
     }
 
@@ -43,13 +32,11 @@ public class SectionMapper {
         }
 
         return new Section(
-                newSection.getTitle(),
-                newSection.getSummary()
+                newSection.getTitle()
         );
     }
 
     public void updateSectionWithDto(Section section, UpdateSectionRequestDto sectionDto) {
         section.setTitle(sectionDto.getTitle());
-        section.setSummary(sectionDto.getSummary());
     }
 }

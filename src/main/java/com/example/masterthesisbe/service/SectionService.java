@@ -6,8 +6,10 @@ import com.example.masterthesisbe.dto.section.*;
 import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.SectionMapper;
 import com.example.masterthesisbe.model.Section;
+import com.example.masterthesisbe.model.SectionContent;
 import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.model.User;
+import com.example.masterthesisbe.repository.SectionContentRepository;
 import com.example.masterthesisbe.repository.SectionRepository;
 import com.example.masterthesisbe.repository.StoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +17,14 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SectionService {
     private final SectionRepository sectionRepository;
+    private final SectionContentRepository sectionContentRepository;
     private final SectionMapper sectionMapper;
     private final StoryRepository storyRepository;
     private final AuthenticationService authService;
@@ -36,15 +40,20 @@ public class SectionService {
         return new PageImpl<>(content, sectionsPagination.getPageable(), sectionsPagination.getTotalElements());
     }
 
+    public List<SectionResponseDto> getAllSectionsOfStory(int storyId) {
+        return this.sectionRepository.findAllByStoryId(storyId).stream()
+                .map(sectionMapper::convertToResponseDto)
+                .toList();
+    }
+
     public SectionContentResponseDto getSectionContentById(Integer sectionId) {
-        Section foundSection = this.sectionRepository.findById(sectionId)
+        SectionContent sectionContent = this.sectionContentRepository.findFirstBySectionId(sectionId)
                 .orElseThrow(() -> new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE));
-        return sectionMapper.convertToContentResponseDto(foundSection);
+        return new SectionContentResponseDto(sectionContent.getId(), sectionContent.getContent());
     }
 
     public SectionResponseDto createNewSection(CreateSectionRequestDto section, int storyId) {
         Section convertedSection = sectionMapper.convertFromCreateRequestDto(section);
-
         Story story = storyRepository.findById(storyId)
                 .orElseThrow(() -> new ApiException(StoryConstants.STORY_NOT_FOUND_MESSAGE));
 
@@ -54,7 +63,15 @@ public class SectionService {
         }
         convertedSection.setStory(story);
 
+        int totalCountOfSection = sectionRepository.countAllByStoryId(storyId);
+        convertedSection.setDisplayOrder(totalCountOfSection + 1);
+
         Section newSection = sectionRepository.save(convertedSection);
+
+        SectionContent newSectionContent = new SectionContent("");
+        newSectionContent.setSection(newSection);
+        sectionContentRepository.save(newSectionContent);
+
         return sectionMapper.convertToResponseDto(newSection);
     }
 
@@ -80,7 +97,15 @@ public class SectionService {
             throw new ApiException(SectionConstants.NO_PERMISSIONS_TO_MODIFY);
         }
 
-        section.setContent(updatedSection.getContent());
+        SectionContent sectionContent = section.getSectionContent();
+        if (sectionContent == null) {
+            SectionContent newSectionContent = new SectionContent(updatedSection.getContent());
+            newSectionContent.setSection(section);
+            sectionContentRepository.save(newSectionContent);
+        } else {
+            sectionContent.setContent(updatedSection.getContent());
+            sectionContentRepository.save(sectionContent);
+        }
     }
 
     public void deleteSection(Integer sectionId) {
@@ -89,6 +114,8 @@ public class SectionService {
         if(!exists) {
             throw new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE);
         }
+        Optional<SectionContent> sectionContent = this.sectionContentRepository.findFirstBySectionId(sectionId);
+        sectionContent.ifPresent(content -> this.sectionContentRepository.deleteById(content.getId()));
 
         this.sectionRepository.deleteById(sectionId);
     }

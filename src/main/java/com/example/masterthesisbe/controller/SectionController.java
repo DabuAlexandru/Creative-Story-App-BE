@@ -10,19 +10,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/section")
 @RequiredArgsConstructor
 public class SectionController extends ValidationHandler {
     private final SectionService sectionService;
 
-    @GetMapping("/get-all/of-story/{storyId}")
-    public ResponseEntity<Page<SectionResponseDto>> retrieveAllSections(
-            @PathVariable int storyId,
+    @GetMapping("/get-all/of-story/paginate/{storyId}")
+    public ResponseEntity<Page<SectionResponseDto>> retrieveAllSectionsPaginate(
+            @PathVariable Integer storyId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy) {
         return ResponseEntity.ok().body(this.sectionService.getSectionsPaginate(storyId, page, size, sortBy));
+    }
+
+    @GetMapping("/get-all/of-story/{storyId}")
+    public ResponseEntity<List<SectionResponseDto>> retrieveAllSections(@PathVariable Integer storyId) {
+        return ResponseEntity.ok().body(this.sectionService.getAllSectionsOfStory(storyId));
     }
 
     @GetMapping("/get/content/{sectionId}")
