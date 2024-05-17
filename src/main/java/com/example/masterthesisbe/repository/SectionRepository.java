@@ -16,6 +16,7 @@ public interface SectionRepository extends
         JpaRepository<Section, Integer>
 {
     Page<Section> findAllByStoryId(long storyId, Pageable pageable);
-    List<Section> findAllByStoryId(long storyId);
+    List<Section> findAllByStoryIdOrderByDisplayOrder(long storyId);
+    Section findFirstByStoryIdOrderByLastModifiedDateDesc(long storyId);
     Integer countAllByStoryId(long storyId);
 }

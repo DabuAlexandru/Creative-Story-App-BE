@@ -7,9 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface SectionNoteRepository extends
         PagingAndSortingRepository<SectionNote, Integer>,
         JpaRepository<SectionNote, Integer> {
     Page<SectionNote> findAllBySectionId(long sectionId, Pageable pageable);
+    List<SectionNote> findAllBySectionIdOrderByLastModifiedDateDesc(long sectionId);
 }

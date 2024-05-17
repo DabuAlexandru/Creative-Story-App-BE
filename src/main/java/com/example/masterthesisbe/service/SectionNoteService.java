@@ -36,6 +36,12 @@ public class SectionNoteService {
         return new PageImpl<>(content, sectionNotesPagination.getPageable(), sectionNotesPagination.getTotalElements());
     }
 
+    public List<SectionNoteResponseDto> getAllNotesOfSection(int sectionId) {
+        return this.sectionNoteRepository.findAllBySectionIdOrderByLastModifiedDateDesc(sectionId).stream()
+                .map(sectionNoteMapper::convertToResponseDto)
+                .collect(Collectors.toList());
+    }
+
     public SectionNoteResponseDto createNewSectionNote(SectionNoteRequestDto sectionNote, int sectionId) {
         SectionNote convertedSectionNote = sectionNoteMapper.convertFromRequestDto(sectionNote);
 

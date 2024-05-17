@@ -41,15 +41,24 @@ public class SectionService {
     }
 
     public List<SectionResponseDto> getAllSectionsOfStory(int storyId) {
-        return this.sectionRepository.findAllByStoryId(storyId).stream()
+        return this.sectionRepository.findAllByStoryIdOrderByDisplayOrder(storyId).stream()
                 .map(sectionMapper::convertToResponseDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public SectionContentResponseDto getSectionContentById(Integer sectionId) {
         SectionContent sectionContent = this.sectionContentRepository.findFirstBySectionId(sectionId)
                 .orElseThrow(() -> new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE));
         return new SectionContentResponseDto(sectionContent.getId(), sectionContent.getContent());
+    }
+
+    public SectionResponseDto getLastModifiedSection(int storyId) {
+        Section foundSection = sectionRepository.findFirstByStoryIdOrderByLastModifiedDateDesc(storyId);
+        if (foundSection == null) {
+            return null;
+        }
+
+        return sectionMapper.convertToResponseDto(foundSection);
     }
 
     public SectionResponseDto createNewSection(CreateSectionRequestDto section, int storyId) {

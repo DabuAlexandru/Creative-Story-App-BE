@@ -37,6 +37,11 @@ public class SectionController extends ValidationHandler {
         return ResponseEntity.ok().body(this.sectionService.getSectionContentById(sectionId));
     }
 
+    @GetMapping("/get/last-modified/of-story/{storyId}")
+    public ResponseEntity<SectionResponseDto> getLastModifiedSection(@PathVariable Integer storyId) {
+        return ResponseEntity.ok().body(this.sectionService.getLastModifiedSection(storyId));
+    }
+
     @PostMapping("/create/for-story/{storyId}")
     public ResponseEntity<SectionResponseDto> createNewSection(@PathVariable Integer storyId, @Valid @RequestBody CreateSectionRequestDto newSection) {
         return ResponseEntity.ok().body(this.sectionService.createNewSection(newSection, storyId));
