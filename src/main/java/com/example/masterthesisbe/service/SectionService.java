@@ -106,14 +106,15 @@ public class SectionService {
             throw new ApiException(SectionConstants.NO_PERMISSIONS_TO_MODIFY);
         }
 
-        SectionContent sectionContent = section.getSectionContent();
-        if (sectionContent == null) {
+        Optional<SectionContent> sectionContent = this.sectionContentRepository.findFirstBySectionId(sectionId);
+        if (sectionContent.isEmpty()) {
             SectionContent newSectionContent = new SectionContent(updatedSection.getContent());
             newSectionContent.setSection(section);
             sectionContentRepository.save(newSectionContent);
         } else {
-            sectionContent.setContent(updatedSection.getContent());
-            sectionContentRepository.save(sectionContent);
+            SectionContent editedSection = sectionContent.get();
+            editedSection.setContent(updatedSection.getContent());
+            sectionContentRepository.save(editedSection);
         }
     }
 
