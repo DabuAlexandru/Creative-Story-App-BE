@@ -7,8 +7,8 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GenreResponseDto {
-    private long id;
+public class GenreDto {
+    private int id;
     private String name;
     private Integer mainGenreId;
 }

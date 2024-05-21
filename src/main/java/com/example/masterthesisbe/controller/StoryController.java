@@ -5,8 +5,10 @@ import com.example.masterthesisbe.dto.story.CreateStoryRequestDto;
 import com.example.masterthesisbe.dto.story.StoryContentResponseDto;
 import com.example.masterthesisbe.dto.story.StoryResponseDto;
 import com.example.masterthesisbe.dto.story.UpdateStoryRequestDto;
+import com.example.masterthesisbe.helpers.handlers.ValidationHandler;
 import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.service.StoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/story")
 @RequiredArgsConstructor
-public class StoryController {
+public class StoryController extends ValidationHandler {
     private final StoryService storyService;
 
     @GetMapping("/get-all")
@@ -46,12 +48,12 @@ public class StoryController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<StoryResponseDto> createNewStory(@RequestBody CreateStoryRequestDto newStory) {
+    public ResponseEntity<StoryResponseDto> createNewStory(@Valid @RequestBody CreateStoryRequestDto newStory) {
         return ResponseEntity.ok().body(this.storyService.createNewStory(newStory));
     }
 
     @PutMapping("/update/{storyId}")
-    public ResponseEntity<StoryResponseDto> updateStory(@PathVariable Integer storyId, @RequestBody UpdateStoryRequestDto updatedStory) {
+    public ResponseEntity<StoryResponseDto> updateStory(@PathVariable Integer storyId, @Valid @RequestBody UpdateStoryRequestDto updatedStory) {
         return ResponseEntity.ok().body(this.storyService.updateStory(storyId, updatedStory));
     }
 

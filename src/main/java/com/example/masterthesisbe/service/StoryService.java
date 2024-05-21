@@ -5,25 +5,19 @@ import com.example.masterthesisbe.dto.story.*;
 import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.StoryMapper;
 import com.example.masterthesisbe.model.*;
-import com.example.masterthesisbe.repository.FileInstanceRepository;
-import com.example.masterthesisbe.repository.GenreRepository;
 import com.example.masterthesisbe.repository.StoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class StoryService {
     private final StoryRepository storyRepository;
-    private final GenreRepository genreRepository;
-    private final FileInstanceRepository fileInstanceRepository;
 
     private final AuthenticationService authService;
     private final FileInstanceService fileInstanceService;
@@ -66,7 +60,6 @@ public class StoryService {
         convertedStory.setAuthor(author);
 
         Story newStory = storyRepository.save(convertedStory);
-        UpdateGenresForStory(newStory, story.getGenreIds());
 
         return storyMapper.convertToResponseDto(newStory);
     }
@@ -80,20 +73,8 @@ public class StoryService {
             throw new ApiException(StoryConstants.NO_PERMISSIONS_TO_MODIFY);
         }
 
-//        UpdateGenresForStory(story, updatedStory.getGenreIds());
-
         storyMapper.updateStoryWithDto(story, updatedStory);
         return this.storyMapper.convertToResponseDto(storyRepository.save(story));
-    }
-
-    private void UpdateGenresForStory(Story story, Set<Integer> genreIds) {
-        Set<Genre> genres = new HashSet<>();
-        for (Integer genreId : genreIds) {
-            Genre genre = genreRepository.findById(genreId)
-                    .orElseThrow(() -> new ApiException("Genre not found with id: " + genreId));
-            genres.add(genre);
-        }
-        story.setGenres(genres);
     }
 
     public void uploadCoverPicture(int storyId, MultipartFile picture) {

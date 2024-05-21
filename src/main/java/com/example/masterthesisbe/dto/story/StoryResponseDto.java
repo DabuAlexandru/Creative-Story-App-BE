@@ -3,12 +3,10 @@ package com.example.masterthesisbe.dto.story;
 import com.example.masterthesisbe.dto.fileInstance.FileInstanceResponseDto;
 import com.example.masterthesisbe.dto.genre.GenreResponseDto;
 import com.example.masterthesisbe.dto.userProfile.UserProfileReferenceResponseDto;
-import com.example.masterthesisbe.dto.userProfile.UserProfileResponseDto;
-import com.example.masterthesisbe.model.StoryOverallScore;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 
 @ToString
 @Getter
@@ -25,8 +23,10 @@ public class StoryResponseDto {
 
     private Instant createdOn;
     private Instant lastUpdatedOn;
-    private Set<GenreResponseDto> genres;
     private UserProfileReferenceResponseDto author;
+
+    private List<GenreResponseDto> genres;
+    private List<GenreResponseDto> subGenres;
 
     private FileInstanceResponseDto coverPicture;
 }

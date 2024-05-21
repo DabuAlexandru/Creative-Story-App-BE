@@ -31,8 +31,6 @@ public class Genre {
     private int id;
 
     private String name;
-    private String badgeColor;
-    private String fontColor;
 
     @CreationTimestamp
     private Instant createdOn;
@@ -43,12 +41,18 @@ public class Genre {
     @LastModifiedBy
     private long lastModifiedBy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    Genre mainGenre;
+
     @ManyToMany(mappedBy = "genres")
     Set<Story> stories;
 
-    public Genre(String name, String badgeColor, String fontColor) {
+    public Genre(String name) {
         this.name = name;
-        this.badgeColor = badgeColor;
-        this.fontColor = fontColor;
+    }
+
+    public Genre(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 }

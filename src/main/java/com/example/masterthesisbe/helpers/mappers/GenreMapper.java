@@ -1,11 +1,10 @@
 package com.example.masterthesisbe.helpers.mappers;
 
-import com.example.masterthesisbe.dto.genre.CreateGenreRequestDto;
-import com.example.masterthesisbe.dto.genre.GenreResponseDto;
-import com.example.masterthesisbe.dto.genre.UpdateGenreRequestDto;
+import com.example.masterthesisbe.dto.genre.*;
 import com.example.masterthesisbe.model.Genre;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 import static java.util.Objects.isNull;
 
@@ -16,12 +15,34 @@ public class GenreMapper {
         if (isNull(genre)) {
             return null;
         }
+        Integer mainGenreId = isNull(genre.getMainGenre()) ? null : genre.getMainGenre().getId();
 
         return new GenreResponseDto(
                 genre.getId(),
                 genre.getName(),
-                genre.getBadgeColor(),
-                genre.getFontColor()
+                mainGenreId
+        );
+    }
+
+    public Genre convertFromDto(GenreDto genreDto) {
+        if (isNull(genreDto)) {
+            return null;
+        }
+
+        return new Genre(
+            genreDto.getId(), genreDto.getName()
+        );
+    }
+
+    public GenreDictionaryResponseDto convertToDictionaryResponseDto(Genre genre) {
+        if (isNull(genre)) {
+            return null;
+        }
+
+        return new GenreDictionaryResponseDto(
+                genre.getId(),
+                genre.getName(),
+                new ArrayList<>()
         );
     }
 
@@ -31,15 +52,11 @@ public class GenreMapper {
         }
 
         return new Genre(
-                newGenre.getName(),
-                newGenre.getBadgeColor(),
-                newGenre.getFontColor()
+                newGenre.getName()
         );
     }
 
     public void updateGenreWithDto(Genre genre, UpdateGenreRequestDto genreDto) {
         genre.setName(genreDto.getName());
-        genre.setBadgeColor(genreDto.getBadgeColor());
-        genre.setFontColor(genreDto.getFontColor());
     }
 }

@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -40,7 +41,7 @@ public class Story {
             joinColumns = @JoinColumn(name = "story_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    private Set<Genre> genres;
+    private List<Genre> genres;
 
     @Column(columnDefinition = "TEXT")
     private String preview;
@@ -57,8 +58,9 @@ public class Story {
     @JoinColumn(name = "cover_picture_id")
     private FileInstance coverPicture;
 
-    public Story(String title, String description) {
+    public Story(String title, String description, List<Genre> genres) {
         this.title = title;
         this.description = description;
+        this.genres = genres;
     }
 }

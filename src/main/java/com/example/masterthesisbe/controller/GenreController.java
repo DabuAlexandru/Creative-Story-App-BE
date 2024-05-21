@@ -1,6 +1,7 @@
 package com.example.masterthesisbe.controller;
 
 import com.example.masterthesisbe.dto.genre.CreateGenreRequestDto;
+import com.example.masterthesisbe.dto.genre.GenreDictionaryResponseDto;
 import com.example.masterthesisbe.dto.genre.GenreResponseDto;
 import com.example.masterthesisbe.dto.genre.UpdateGenreRequestDto;
 import com.example.masterthesisbe.helpers.handlers.ValidationHandler;
@@ -11,18 +12,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/genre")
 @RequiredArgsConstructor
 public class GenreController extends ValidationHandler {
     private final GenreService genreService;
 
-    @GetMapping("/get-all")
-    public ResponseEntity<Page<GenreResponseDto>> retrieveAllGenres(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy) {
-        return ResponseEntity.ok().body(this.genreService.getGenresPaginate(page, size, sortBy));
+    @GetMapping("/get-dict")
+    public ResponseEntity<List<GenreDictionaryResponseDto>> retrieveAllGenreDictionaries() {
+        return ResponseEntity.ok().body(this.genreService.getGenreDictionaries());
+    }
+
+    @GetMapping("/get-main")
+    public ResponseEntity<List<GenreResponseDto>> retrieveAllMainGenres() {
+        return ResponseEntity.ok().body(this.genreService.getGenres(null));
+    }
+
+    @GetMapping("/get-sub/{mainGenreId}")
+    public ResponseEntity<List<GenreResponseDto>> retrieveAllSubGenresOfMain(@PathVariable Integer mainGenreId) {
+        return ResponseEntity.ok().body(this.genreService.getGenres(mainGenreId));
     }
 
     @GetMapping("/{genreId}")
