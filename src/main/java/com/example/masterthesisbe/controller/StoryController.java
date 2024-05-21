@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,5 +53,11 @@ public class StoryController {
     @PutMapping("/update/{storyId}")
     public ResponseEntity<StoryResponseDto> updateStory(@PathVariable Integer storyId, @RequestBody UpdateStoryRequestDto updatedStory) {
         return ResponseEntity.ok().body(this.storyService.updateStory(storyId, updatedStory));
+    }
+
+    @PostMapping("/update-picture/{storyId}")
+    public ResponseEntity<String> uploadProfilePicture(@PathVariable Integer storyId, @RequestParam("file") MultipartFile file) {
+        this.storyService.uploadCoverPicture(storyId, file);
+        return ResponseEntity.ok().body("You successfully uploaded the cover picture!");
     }
 }

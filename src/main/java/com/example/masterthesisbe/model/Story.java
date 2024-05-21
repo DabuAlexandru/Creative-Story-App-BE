@@ -53,6 +53,10 @@ public class Story {
     @JoinColumn(name = "story_overall_score_id")
     private StoryOverallScore storyOverallScore;
 
+    @OneToOne
+    @JoinColumn(name = "cover_picture_id")
+    private FileInstance coverPicture;
+
     public Story(String title, String description) {
         this.title = title;
         this.description = description;

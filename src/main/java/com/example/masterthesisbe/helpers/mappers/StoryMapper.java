@@ -1,5 +1,6 @@
 package com.example.masterthesisbe.helpers.mappers;
 
+import com.example.masterthesisbe.dto.fileInstance.FileInstanceResponseDto;
 import com.example.masterthesisbe.dto.genre.GenreResponseDto;
 import com.example.masterthesisbe.dto.story.*;
 import com.example.masterthesisbe.dto.userProfile.UserProfileReferenceResponseDto;
@@ -20,6 +21,7 @@ import static java.util.Objects.isNull;
 @Component
 @RequiredArgsConstructor
 public class StoryMapper {
+    private final FileInstanceMapper fileInstanceMapper;
     private final UserProfileMapper userProfileMapper;
     private final GenreMapper genreMapper;
 
@@ -39,6 +41,11 @@ public class StoryMapper {
 
         StoryOverallScoreResponseDto overallScore = this.convertOverallScoreToResponseDto(story.getStoryOverallScore());
 
+        var profilePicture = story.getCoverPicture();
+        FileInstanceResponseDto convertedCoverPicture = profilePicture != null
+                ? fileInstanceMapper.convertToResponseDto(profilePicture)
+                : null;
+
         return new StoryResponseDto(
                 story.getId(),
                 story.getTitle(),
@@ -48,8 +55,8 @@ public class StoryMapper {
                 story.getCreatedOn(),
                 story.getLastUpdatedOn(),
                 convertedGenres,
-
-                convertedAuthor
+                convertedAuthor,
+                convertedCoverPicture
         );
     }
 
@@ -85,6 +92,7 @@ public class StoryMapper {
     public void updateStoryWithDto(Story story, UpdateStoryRequestDto storyDto) {
         story.setTitle(storyDto.getTitle());
         story.setDescription(storyDto.getDescription());
+        story.setPreview(storyDto.getPreview());
     }
 
     private StoryOverallScoreResponseDto convertOverallScoreToResponseDto(StoryOverallScore storyScore) {

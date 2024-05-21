@@ -1,5 +1,6 @@
 package com.example.masterthesisbe.dto.story;
 
+import com.example.masterthesisbe.dto.fileInstance.FileInstanceResponseDto;
 import com.example.masterthesisbe.dto.genre.GenreResponseDto;
 import com.example.masterthesisbe.dto.userProfile.UserProfileReferenceResponseDto;
 import com.example.masterthesisbe.dto.userProfile.UserProfileResponseDto;
@@ -26,4 +27,6 @@ public class StoryResponseDto {
     private Instant lastUpdatedOn;
     private Set<GenreResponseDto> genres;
     private UserProfileReferenceResponseDto author;
+
+    private FileInstanceResponseDto coverPicture;
 }

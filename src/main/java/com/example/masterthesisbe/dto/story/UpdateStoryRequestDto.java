@@ -19,7 +19,8 @@ import java.util.Set;
 public class UpdateStoryRequestDto {
     @NotBlank(message = StoryConstants.TITLE_NOT_BLANK_CONSTRAINT_MESSAGE)
     private String title;
+    @NotBlank(message = StoryConstants.DESCRIPTION_NOT_BLANK_CONSTRAINT_MESSAGE)
     private String description;
-    @NotNull(message = StoryConstants.GENRES_NOT_NULL_CONSTRAINT_MESSAGE)
-    private Set<Integer> genreIds;
+    @NotBlank(message = StoryConstants.PREVIEW_NOT_BLANK_CONSTRAINT_MESSAGE)
+    private String preview;
 }

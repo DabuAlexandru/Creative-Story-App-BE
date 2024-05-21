@@ -49,7 +49,7 @@ public class SectionNoteService {
                 .orElseThrow(() -> new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE));
 
         User loggedInUser = authService.getLoggedInUser();
-        if (loggedInUser.getId() != section.getStory().getAuthor().getId()) {
+        if (loggedInUser.getId() != section.getStory().getAuthor().getUser().getId()) {
             throw new ApiException(SectionNoteConstants.NO_PERMISSIONS_TO_MODIFY);
         }
         convertedSectionNote.setSection(section);
@@ -63,7 +63,7 @@ public class SectionNoteService {
                 .orElseThrow(() -> new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE));
 
         User loggedInUser = authService.getLoggedInUser();
-        if (loggedInUser.getId() != sectionNote.getSection().getStory().getAuthor().getId()) {
+        if (loggedInUser.getId() != sectionNote.getSection().getStory().getAuthor().getUser().getId()) {
             throw new ApiException(SectionNoteConstants.NO_PERMISSIONS_TO_MODIFY);
         }
 

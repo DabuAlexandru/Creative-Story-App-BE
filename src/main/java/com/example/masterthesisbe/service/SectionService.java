@@ -67,7 +67,7 @@ public class SectionService {
                 .orElseThrow(() -> new ApiException(StoryConstants.STORY_NOT_FOUND_MESSAGE));
 
         User loggedInUser = authService.getLoggedInUser();
-        if (loggedInUser.getId() != story.getAuthor().getId()) {
+        if (loggedInUser.getId() != story.getAuthor().getUser().getId()) {
             throw new ApiException(SectionConstants.NO_PERMISSIONS_TO_MODIFY);
         }
         convertedSection.setStory(story);
@@ -89,7 +89,7 @@ public class SectionService {
                 .orElseThrow(() -> new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE));
 
         User loggedInUser = authService.getLoggedInUser();
-        if (loggedInUser.getId() != section.getStory().getAuthor().getId()) {
+        if (loggedInUser.getId() != section.getStory().getAuthor().getUser().getId()) {
             throw new ApiException(SectionConstants.NO_PERMISSIONS_TO_MODIFY);
         }
 
@@ -102,7 +102,7 @@ public class SectionService {
                 .orElseThrow(() -> new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE));
 
         User loggedInUser = authService.getLoggedInUser();
-        if (loggedInUser.getId() != section.getStory().getAuthor().getId()) {
+        if (loggedInUser.getId() != section.getStory().getAuthor().getUser().getId()) {
             throw new ApiException(SectionConstants.NO_PERMISSIONS_TO_MODIFY);
         }
 
