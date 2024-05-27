@@ -32,6 +32,11 @@ public class SectionController extends ValidationHandler {
         return ResponseEntity.ok().body(this.sectionService.getAllSectionsOfStory(storyId));
     }
 
+    @GetMapping("/get-all/of-story/with-content/{storyId}")
+    public ResponseEntity<List<SectionWithContentResponseDto>> retrieveAllSectionsWithContent(@PathVariable Integer storyId) {
+        return ResponseEntity.ok().body(this.sectionService.getAllSectionsOfStoryWithContent(storyId));
+    }
+
     @GetMapping("/get/content/{sectionId}")
     public ResponseEntity<SectionContentResponseDto> retrieveSection(@PathVariable Integer sectionId) {
         return ResponseEntity.ok().body(this.sectionService.getSectionContentById(sectionId));

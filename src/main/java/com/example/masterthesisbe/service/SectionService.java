@@ -46,6 +46,12 @@ public class SectionService {
                 .collect(Collectors.toList());
     }
 
+    public List<SectionWithContentResponseDto> getAllSectionsOfStoryWithContent(int storyId) {
+        return this.sectionRepository.findAllWithContentByStoryIdOrderByDisplayOrder(storyId).stream()
+                .map(sectionMapper::convertToResponseWithContentDto)
+                .collect(Collectors.toList());
+    }
+
     public SectionContentResponseDto getSectionContentById(Integer sectionId) {
         SectionContent sectionContent = this.sectionContentRepository.findFirstBySectionId(sectionId)
                 .orElseThrow(() -> new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE));

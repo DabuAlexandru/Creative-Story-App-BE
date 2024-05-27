@@ -38,10 +38,6 @@ public class Section {
 	@JoinColumn(name = "story_id")
 	private Story story;
 
-	@OneToOne
-	@JoinColumn(name = "section_content_id")
-	private SectionContent sectionContent;
-
 	public Section(String title) {
 		this.title = title;
 	}
