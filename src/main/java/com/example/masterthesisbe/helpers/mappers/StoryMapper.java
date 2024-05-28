@@ -48,9 +48,9 @@ public class StoryMapper {
 
         StoryOverallScoreResponseDto overallScore = this.convertOverallScoreToResponseDto(story.getStoryOverallScore());
 
-        var profilePicture = story.getCoverPicture();
-        FileInstanceResponseDto convertedCoverPicture = profilePicture != null
-                ? fileInstanceMapper.convertToResponseDto(profilePicture)
+        var coverPicture = story.getCoverPicture();
+        FileInstanceResponseDto convertedCoverPicture = coverPicture != null
+                ? fileInstanceMapper.convertToResponseDto(coverPicture)
                 : null;
 
         return new StoryResponseDto(

@@ -8,7 +8,6 @@ import com.example.masterthesisbe.helpers.handlers.ValidationHandler;
 import com.example.masterthesisbe.service.GenreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

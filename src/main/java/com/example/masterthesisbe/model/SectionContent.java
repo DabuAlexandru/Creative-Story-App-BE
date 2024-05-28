@@ -22,7 +22,6 @@ public class SectionContent {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	// temporary
 	@Column(columnDefinition = "TEXT")
 	private String content;
 
