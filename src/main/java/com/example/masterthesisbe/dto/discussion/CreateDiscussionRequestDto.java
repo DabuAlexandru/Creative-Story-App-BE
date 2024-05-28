@@ -17,4 +17,6 @@ public class CreateDiscussionRequestDto {
 
     @NotBlank(message = DiscussionConstants.CONTENT_NOT_BLANK_CONSTRAINT_MESSAGE)
     private String content;
+
+    private Integer storyId;
 }

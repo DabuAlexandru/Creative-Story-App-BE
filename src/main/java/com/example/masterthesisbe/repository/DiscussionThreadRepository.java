@@ -15,6 +15,7 @@ public interface DiscussionThreadRepository extends
         JpaRepository<DiscussionThread, Integer>
 {
     Page<DiscussionThread> findAllPaginateByMainThreadIdOrderByCreatedByDesc(Integer mainDiscussionThreadId, Pageable pageable);
+    Page<DiscussionThread> findAllPaginateByDiscussionIdOrderByCreatedByDesc(Integer discussionId, Pageable pageable);
     List<DiscussionThread> findAllByMainThreadIdOrderByCreatedByDesc(Integer mainDiscussionThreadId);
     Page<DiscussionThread> findAllPaginateByAuthorId(Integer authorId, Pageable pageable);
 }

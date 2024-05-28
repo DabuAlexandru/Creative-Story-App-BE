@@ -37,6 +37,10 @@ public class Discussion {
     @JoinColumn(name="author_id")
     private UserProfile author;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="story_id")
+    private Story story;
+
     @CreationTimestamp
     private Instant createdOn;
     @UpdateTimestamp

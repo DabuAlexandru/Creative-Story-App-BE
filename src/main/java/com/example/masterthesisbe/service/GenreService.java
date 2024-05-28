@@ -10,7 +10,6 @@ import com.example.masterthesisbe.helpers.mappers.GenreMapper;
 import com.example.masterthesisbe.model.Genre;
 import com.example.masterthesisbe.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

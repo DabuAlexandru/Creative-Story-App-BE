@@ -1,6 +1,5 @@
 package com.example.masterthesisbe.service;
 
-import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.model.StoryOverallScore;
 import com.example.masterthesisbe.model.StoryReview;
 import com.example.masterthesisbe.repository.StoryOverallScoreRepository;

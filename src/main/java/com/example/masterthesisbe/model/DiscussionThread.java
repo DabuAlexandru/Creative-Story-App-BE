@@ -35,6 +35,10 @@ public class DiscussionThread {
     @JoinColumn(name="author_id")
     private UserProfile author;
 
+    @ManyToOne
+    @JoinColumn(name="discussion_id")
+    private Discussion discussion;
+
     @CreationTimestamp
     private Instant createdOn;
     @UpdateTimestamp
@@ -45,6 +49,7 @@ public class DiscussionThread {
     private long lastModifiedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="main_thread_id")
     DiscussionThread mainThread;
 
     @OneToMany(fetch = FetchType.LAZY)

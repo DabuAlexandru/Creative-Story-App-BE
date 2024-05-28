@@ -1,14 +1,17 @@
 package com.example.masterthesisbe.service;
 
+import com.example.masterthesisbe.constants.DiscussionConstants;
 import com.example.masterthesisbe.constants.DiscussionThreadConstants;
 import com.example.masterthesisbe.dto.discussionThread.CreateDiscussionThreadRequestDto;
 import com.example.masterthesisbe.dto.discussionThread.DiscussionThreadResponseDto;
 import com.example.masterthesisbe.dto.discussionThread.UpdateDiscussionThreadRequestDto;
 import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.DiscussionThreadMapper;
+import com.example.masterthesisbe.model.Discussion;
 import com.example.masterthesisbe.model.DiscussionThread;
 import com.example.masterthesisbe.model.User;
 import com.example.masterthesisbe.model.UserProfile;
+import com.example.masterthesisbe.repository.DiscussionRepository;
 import com.example.masterthesisbe.repository.DiscussionThreadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -17,10 +20,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+
 @Service
 @RequiredArgsConstructor
 public class DiscussionThreadService {
     private final DiscussionThreadRepository discussionThreadRepository;
+    private final DiscussionRepository discussionRepository;
     private final DiscussionThreadMapper discussionThreadMapper;
     private final AuthenticationService authService;
 
@@ -52,6 +58,17 @@ public class DiscussionThreadService {
         return new PageImpl<>(content, discussionThreadsPagination.getPageable(), discussionThreadsPagination.getTotalElements());
     }
 
+    public Page<DiscussionThreadResponseDto> getDiscussionThreadsOfDiscussionPaginate(int discussionId, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        Page<DiscussionThread> discussionThreadsPagination = this.discussionThreadRepository.findAllPaginateByDiscussionIdOrderByCreatedByDesc(discussionId, pageable);
+
+        List<DiscussionThreadResponseDto> content = discussionThreadsPagination.getContent().stream()
+                .map(discussionThreadMapper::convertToResponseDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(content, discussionThreadsPagination.getPageable(), discussionThreadsPagination.getTotalElements());
+    }
+
     public DiscussionThreadResponseDto getDiscussionThreadById(int discussionThreadId) {
         DiscussionThread foundThread = this.discussionThreadRepository.findById(discussionThreadId)
                 .orElseThrow(() -> new ApiException(DiscussionThreadConstants.DISCUSSION_THREAD_NOT_FOUND_MESSAGE));
@@ -62,6 +79,17 @@ public class DiscussionThreadService {
         DiscussionThread convertedDiscussionThread = discussionThreadMapper.convertFromCreateRequestDto(discussionThread);
         UserProfile author = authService.getCurrentUserProfile();
         convertedDiscussionThread.setAuthor(author);
+
+        if (!isNull(discussionThread.getMainThreadId())) {
+            DiscussionThread mainThread = discussionThreadRepository.findById(discussionThread.getMainThreadId())
+                    .orElseThrow(() -> new ApiException(DiscussionThreadConstants.DISCUSSION_THREAD_NOT_FOUND_MESSAGE));
+            convertedDiscussionThread.setMainThread(mainThread);
+        }
+
+        Discussion discussion = discussionRepository.findById(discussionThread.getDiscussionId())
+                .orElseThrow(() -> new ApiException((DiscussionConstants.DISCUSSION_NOT_FOUND_MESSAGE)));
+
+        convertedDiscussionThread.setDiscussion(discussion);
 
         DiscussionThread newDiscussionThread = discussionThreadRepository.save(convertedDiscussionThread);
         return discussionThreadMapper.convertToResponseDto(newDiscussionThread);

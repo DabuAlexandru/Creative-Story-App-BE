@@ -5,7 +5,6 @@ import com.example.masterthesisbe.dto.storyReview.StoryReviewResponseDto;
 import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.StoryReviewMapper;
 import com.example.masterthesisbe.model.Story;
-import com.example.masterthesisbe.model.StoryOverallScore;
 import com.example.masterthesisbe.model.StoryReview;
 import com.example.masterthesisbe.model.UserProfile;
 import com.example.masterthesisbe.repository.StoryRepository;

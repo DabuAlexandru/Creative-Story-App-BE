@@ -34,6 +34,15 @@ public class DiscussionController extends ValidationHandler {
         return ResponseEntity.ok().body(this.discussionService.getDiscussionsOfAuthorPaginate(authorId, page, size, sortBy));
     }
 
+    @GetMapping("/get-all/of-story/{storyId}")
+    public ResponseEntity<Page<DiscussionResponseDto>> retrieveAllDiscussionsOfStory(
+            @PathVariable Integer storyId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return ResponseEntity.ok().body(this.discussionService.getDiscussionsOfStoryPaginate(storyId, page, size, sortBy));
+    }
+
     @GetMapping("/{discussionId}")
     public ResponseEntity<DiscussionResponseDto> retrieveDiscussion(@PathVariable Integer discussionId) {
         return ResponseEntity.ok().body(this.discussionService.getDiscussionById(discussionId));

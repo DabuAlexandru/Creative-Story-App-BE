@@ -42,6 +42,15 @@ public class DiscussionThreadController extends ValidationHandler {
         return ResponseEntity.ok().body(this.discussionThreadService.getDiscussionThreadsOfAuthorPaginate(authorId, page, size, sortBy));
     }
 
+    @GetMapping("/get-all/of-discussion/{discussionId}")
+    public ResponseEntity<Page<DiscussionThreadResponseDto>> retrieveAllDiscussionThreadsOfDiscussion(
+            @PathVariable Integer discussionId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return ResponseEntity.ok().body(this.discussionThreadService.getDiscussionThreadsOfDiscussionPaginate(discussionId, page, size, sortBy));
+    }
+
     @GetMapping("/{discussionThreadId}")
     public ResponseEntity<DiscussionThreadResponseDto> retrieveDiscussionThread(@PathVariable Integer discussionThreadId) {
         return ResponseEntity.ok().body(this.discussionThreadService.getDiscussionThreadById(discussionThreadId));
