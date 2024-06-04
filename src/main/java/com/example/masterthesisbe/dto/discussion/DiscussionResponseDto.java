@@ -3,7 +3,7 @@ package com.example.masterthesisbe.dto.discussion;
 import com.example.masterthesisbe.dto.userProfile.UserProfileReferenceResponseDto;
 import lombok.*;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @ToString
 @Getter
@@ -15,6 +15,7 @@ public class DiscussionResponseDto {
     private String title;
     private String content;
     private UserProfileReferenceResponseDto author;
-    private Instant createdOn;
-    private Instant lastUpdatedOn;
+    private int commentsCount;
+    private Timestamp createdOn;
+    private Timestamp lastUpdatedOn;
 }

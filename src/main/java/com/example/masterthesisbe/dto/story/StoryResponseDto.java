@@ -5,7 +5,7 @@ import com.example.masterthesisbe.dto.genre.GenreResponseDto;
 import com.example.masterthesisbe.dto.userProfile.UserProfileReferenceResponseDto;
 import lombok.*;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.List;
 
 @ToString
@@ -21,8 +21,8 @@ public class StoryResponseDto {
 
     private String preview;
 
-    private Instant createdOn;
-    private Instant lastUpdatedOn;
+    private Timestamp createdOn;
+    private Timestamp lastUpdatedOn;
     private UserProfileReferenceResponseDto author;
 
     private List<GenreResponseDto> genres;

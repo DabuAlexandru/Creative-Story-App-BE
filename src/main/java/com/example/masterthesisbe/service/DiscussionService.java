@@ -12,6 +12,7 @@ import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.model.User;
 import com.example.masterthesisbe.model.UserProfile;
 import com.example.masterthesisbe.repository.DiscussionRepository;
+import com.example.masterthesisbe.repository.DiscussionThreadRepository;
 import com.example.masterthesisbe.repository.StoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -26,16 +27,28 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class DiscussionService {
     private final DiscussionRepository discussionRepository;
+    private final DiscussionThreadRepository discussionThreadRepository;
     private final StoryRepository storyRepository;
     private final DiscussionMapper discussionMapper;
     private final AuthenticationService authService;
+
+    private int getCommentsCountForDiscussionId(int discussionId) {
+        return discussionThreadRepository.countAllByDiscussionId(discussionId);
+    }
+
+    private DiscussionResponseDto convertToCompleteResponseDto(Discussion discussion) {
+        DiscussionResponseDto responseDto = discussionMapper.convertToResponseDto(discussion);
+        int commentsCount = discussionThreadRepository.countAllByDiscussionId(discussion.getId());
+        responseDto.setCommentsCount(commentsCount);
+        return responseDto;
+    }
 
     public Page<DiscussionResponseDto> getDiscussionsPaginate(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
         Page<Discussion> discussionsPagination = this.discussionRepository.findAll(pageable);
 
         List<DiscussionResponseDto> content = discussionsPagination.getContent().stream()
-                .map(discussionMapper::convertToResponseDto)
+                .map(this::convertToCompleteResponseDto)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(content, discussionsPagination.getPageable(), discussionsPagination.getTotalElements());
@@ -46,7 +59,7 @@ public class DiscussionService {
         Page<Discussion> discussionsPagination = this.discussionRepository.findAllPaginateByAuthorId(authorId, pageable);
 
         List<DiscussionResponseDto> content = discussionsPagination.getContent().stream()
-                .map(discussionMapper::convertToResponseDto)
+                .map(this::convertToCompleteResponseDto)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(content, discussionsPagination.getPageable(), discussionsPagination.getTotalElements());
@@ -57,7 +70,7 @@ public class DiscussionService {
         Page<Discussion> discussionsPagination = this.discussionRepository.findAllPaginateByStoryId(storyId, pageable);
 
         List<DiscussionResponseDto> content = discussionsPagination.getContent().stream()
-                .map(discussionMapper::convertToResponseDto)
+                .map(this::convertToCompleteResponseDto)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(content, discussionsPagination.getPageable(), discussionsPagination.getTotalElements());
@@ -66,7 +79,7 @@ public class DiscussionService {
     public DiscussionResponseDto getDiscussionById(Integer discussionId) {
         Discussion foundDiscussion = this.discussionRepository.findById(discussionId)
                 .orElseThrow(() -> new ApiException(DiscussionConstants.DISCUSSION_NOT_FOUND_MESSAGE));
-        return discussionMapper.convertToResponseDto(foundDiscussion);
+        return convertToCompleteResponseDto(foundDiscussion);
     }
 
     public DiscussionResponseDto createNewDiscussion(CreateDiscussionRequestDto discussion) {
@@ -94,6 +107,6 @@ public class DiscussionService {
         }
 
         discussionMapper.updateDiscussionWithDto(discussion, updatedDiscussion);
-        return this.discussionMapper.convertToResponseDto(discussionRepository.save(discussion));
+        return convertToCompleteResponseDto(discussionRepository.save(discussion));
     }
 }

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class DiscussionController extends ValidationHandler {
     private final DiscussionService discussionService;
 
-    @GetMapping("/get-all")
+    @GetMapping("/get-all/paginate")
     public ResponseEntity<Page<DiscussionResponseDto>> retrieveAllDiscussions(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -25,7 +25,7 @@ public class DiscussionController extends ValidationHandler {
         return ResponseEntity.ok().body(this.discussionService.getDiscussionsPaginate(page, size, sortBy));
     }
 
-    @GetMapping("/get-all/of-author/{authorId}")
+    @GetMapping("/get-all/of-author/paginate/{authorId}")
     public ResponseEntity<Page<DiscussionResponseDto>> retrieveAllDiscussionsOfAuthor(
             @PathVariable Integer authorId,
             @RequestParam(defaultValue = "0") int page,
@@ -34,7 +34,7 @@ public class DiscussionController extends ValidationHandler {
         return ResponseEntity.ok().body(this.discussionService.getDiscussionsOfAuthorPaginate(authorId, page, size, sortBy));
     }
 
-    @GetMapping("/get-all/of-story/{storyId}")
+    @GetMapping("/get-all/of-story/paginate/{storyId}")
     public ResponseEntity<Page<DiscussionResponseDto>> retrieveAllDiscussionsOfStory(
             @PathVariable Integer storyId,
             @RequestParam(defaultValue = "0") int page,

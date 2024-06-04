@@ -4,7 +4,7 @@ import com.example.masterthesisbe.dto.userProfile.UserProfileReferenceResponseDt
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Validated
 @ToString
@@ -23,6 +23,6 @@ public class StoryReviewResponseDto {
     private int settingScore;
     private int themeScore;
 
-    private Instant createdOn;
+    private Timestamp createdOn;
     private UserProfileReferenceResponseDto userProfile;
 }

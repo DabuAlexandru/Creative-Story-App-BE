@@ -14,6 +14,7 @@ public interface DiscussionThreadRepository extends
         PagingAndSortingRepository<DiscussionThread, Integer>,
         JpaRepository<DiscussionThread, Integer>
 {
+    int countAllByDiscussionId(Integer discussionId);
     Page<DiscussionThread> findAllPaginateByMainThreadIdOrderByCreatedByDesc(Integer mainDiscussionThreadId, Pageable pageable);
     Page<DiscussionThread> findAllPaginateByDiscussionIdOrderByCreatedByDesc(Integer discussionId, Pageable pageable);
     List<DiscussionThread> findAllByMainThreadIdOrderByCreatedByDesc(Integer mainDiscussionThreadId);

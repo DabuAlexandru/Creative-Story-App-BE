@@ -5,11 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -34,8 +34,8 @@ public class FileInstance {
     @JoinColumn(name="user_id")
     private User user;
 
-    @CreationTimestamp
-    private Instant createdOn;
+    @CreatedDate
+    private Timestamp createdOn;
     @CreatedBy
     private long createdBy;
 }

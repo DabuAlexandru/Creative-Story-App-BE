@@ -2,7 +2,7 @@ package com.example.masterthesisbe.dto.userProfile;
 
 import lombok.*;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @ToString
 @Getter
@@ -11,5 +11,5 @@ import java.time.Instant;
 @AllArgsConstructor
 public class StoryFavoriteResponseDto {
     private int storyId;
-    private Instant createdOn;
+    private Timestamp createdOn;
 }

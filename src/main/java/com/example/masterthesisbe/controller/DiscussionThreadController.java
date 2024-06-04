@@ -33,7 +33,7 @@ public class DiscussionThreadController extends ValidationHandler {
         return ResponseEntity.ok().body(this.discussionThreadService.getAllDiscussionThreadsOfMainThread(mainThreadId));
     }
 
-    @GetMapping("/get-all/of-author/{authorId}")
+    @GetMapping("/get-all/of-author/paginate/{authorId}")
     public ResponseEntity<Page<DiscussionThreadResponseDto>> retrieveAllDiscussionThreadsOfAuthor(
             @PathVariable Integer authorId,
             @RequestParam(defaultValue = "0") int page,
@@ -42,7 +42,7 @@ public class DiscussionThreadController extends ValidationHandler {
         return ResponseEntity.ok().body(this.discussionThreadService.getDiscussionThreadsOfAuthorPaginate(authorId, page, size, sortBy));
     }
 
-    @GetMapping("/get-all/of-discussion/{discussionId}")
+    @GetMapping("/get-all/of-discussion/paginate/{discussionId}")
     public ResponseEntity<Page<DiscussionThreadResponseDto>> retrieveAllDiscussionThreadsOfDiscussion(
             @PathVariable Integer discussionId,
             @RequestParam(defaultValue = "0") int page,

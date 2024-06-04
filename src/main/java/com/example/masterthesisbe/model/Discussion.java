@@ -5,15 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -41,21 +39,17 @@ public class Discussion {
     @JoinColumn(name="story_id")
     private Story story;
 
-    @CreationTimestamp
-    private Instant createdOn;
-    @UpdateTimestamp
-    private Instant lastUpdatedOn;
+    @CreatedDate
+    private Timestamp createdOn;
+    @LastModifiedDate
+    private Timestamp lastUpdatedOn;
     @CreatedBy
     private long createdBy;
     @LastModifiedBy
     private long lastModifiedBy;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    List<DiscussionThread> threadList;
-
     public Discussion(String title, String content) {
         this.title = title;
         this.content = content;
-        this.threadList = new ArrayList<>();
     }
 }

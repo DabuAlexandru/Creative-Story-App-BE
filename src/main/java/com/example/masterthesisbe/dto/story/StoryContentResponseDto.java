@@ -1,10 +1,9 @@
 package com.example.masterthesisbe.dto.story;
 
 import com.example.masterthesisbe.dto.userProfile.UserProfileReferenceResponseDto;
-import com.example.masterthesisbe.dto.userProfile.UserProfileResponseDto;
 import lombok.*;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @ToString
 @Getter
@@ -15,8 +14,8 @@ public class StoryContentResponseDto {
     private long id;
     private String title;
     private String content;
-    private Instant createdOn;
-    private Instant lastUpdatedOn;
+    private Timestamp createdOn;
+    private Timestamp lastUpdatedOn;
 //    private Set<Genre> genres;
     private UserProfileReferenceResponseDto author;
 }

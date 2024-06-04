@@ -5,8 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
 
@@ -15,6 +16,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "section",
 		uniqueConstraints = {
 			@UniqueConstraint(name = "SectionTitleStoryUnique", columnNames = {"storyId", "title"})
@@ -29,9 +31,9 @@ public class Section {
 
 	private int displayOrder;
 
-	@CreationTimestamp
+	@CreatedDate
 	private Timestamp creationDate;
-	@UpdateTimestamp
+	@LastModifiedDate
 	private Timestamp lastModifiedDate;
 
 	@ManyToOne

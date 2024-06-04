@@ -5,18 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "story",
         uniqueConstraints = {
                 @UniqueConstraint(name = "AuthorTitleStoryUnique", columnNames = {"userId", "title"})
@@ -30,10 +31,10 @@ public class Story {
     private String title;
     private String description;
 
-    @CreationTimestamp
-    private Instant createdOn;
-    @UpdateTimestamp
-    private Instant lastUpdatedOn;
+    @CreatedDate
+    private Timestamp createdOn;
+    @LastModifiedDate
+    private Timestamp lastUpdatedOn;
 
     @ManyToMany
     @JoinTable(
