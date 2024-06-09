@@ -18,7 +18,10 @@ import java.sql.Timestamp;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "story_favorite",
         uniqueConstraints = {
-                @UniqueConstraint(name = "NoFavoriteDuplicates", columnNames = {"story_id", "user_profile_id"})
+                @UniqueConstraint(
+                        name = "NoFavoriteDuplicates",
+                        columnNames = {"story_id", "user_profile_id"}
+                )
         })
 public class StoryFavorite {
 

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "storyOverallScore")
+@Table(name = "story_overall_score")
 public class StoryOverallScore {
 
     @Id

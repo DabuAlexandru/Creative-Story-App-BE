@@ -19,7 +19,10 @@ import java.sql.Timestamp;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "section",
 		uniqueConstraints = {
-			@UniqueConstraint(name = "SectionTitleStoryUnique", columnNames = {"storyId", "title"})
+			@UniqueConstraint(
+					name = "SectionTitleStoryUnique",
+					columnNames = {"story_id", "title"}
+			)
 })
 public class Section {
 

@@ -3,6 +3,7 @@ package com.example.masterthesisbe.controller;
 import com.example.masterthesisbe.dto.discussionThread.CreateDiscussionThreadRequestDto;
 import com.example.masterthesisbe.dto.discussionThread.DiscussionThreadResponseDto;
 import com.example.masterthesisbe.dto.discussionThread.UpdateDiscussionThreadRequestDto;
+import com.example.masterthesisbe.dto.general.CountPaginateResponseDto;
 import com.example.masterthesisbe.helpers.handlers.ValidationHandler;
 import com.example.masterthesisbe.service.DiscussionThreadService;
 import jakarta.validation.Valid;
@@ -40,6 +41,13 @@ public class DiscussionThreadController extends ValidationHandler {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy) {
         return ResponseEntity.ok().body(this.discussionThreadService.getDiscussionThreadsOfAuthorPaginate(authorId, page, size, sortBy));
+    }
+
+    @GetMapping("/get-pages-count/of-discussion/{discussionId}")
+    public ResponseEntity<CountPaginateResponseDto> retrieveThreadsOfDiscussionPagesCount(
+            @PathVariable Integer discussionId,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok().body(this.discussionThreadService.getThreadsOfDiscussionPagesCount(discussionId, size));
     }
 
     @GetMapping("/get-all/of-discussion/paginate/{discussionId}")

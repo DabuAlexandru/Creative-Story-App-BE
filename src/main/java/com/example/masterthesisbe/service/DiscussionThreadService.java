@@ -5,6 +5,7 @@ import com.example.masterthesisbe.constants.DiscussionThreadConstants;
 import com.example.masterthesisbe.dto.discussionThread.CreateDiscussionThreadRequestDto;
 import com.example.masterthesisbe.dto.discussionThread.DiscussionThreadResponseDto;
 import com.example.masterthesisbe.dto.discussionThread.UpdateDiscussionThreadRequestDto;
+import com.example.masterthesisbe.dto.general.CountPaginateResponseDto;
 import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.DiscussionThreadMapper;
 import com.example.masterthesisbe.model.Discussion;
@@ -56,6 +57,13 @@ public class DiscussionThreadService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(content, discussionThreadsPagination.getPageable(), discussionThreadsPagination.getTotalElements());
+    }
+
+    public CountPaginateResponseDto getThreadsOfDiscussionPagesCount(int discussionId, int size) {
+        int threadsCount = discussionThreadRepository.countAllByDiscussionId(discussionId);
+        int pagesCount = (int)Math.ceil((double) threadsCount / size);
+
+        return new CountPaginateResponseDto(threadsCount, pagesCount);
     }
 
     public Page<DiscussionThreadResponseDto> getDiscussionThreadsOfDiscussionPaginate(int discussionId, int page, int size, String sortBy) {

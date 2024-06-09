@@ -19,14 +19,14 @@ import java.sql.Timestamp;
 @Builder
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "discussionThread")
+@Table(name = "discussion_thread")
 public class DiscussionThread {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(columnDefinition = "varchar(1023)")
+    @Column(columnDefinition = "varchar(1020)")
     private String content;
 
     @ManyToOne

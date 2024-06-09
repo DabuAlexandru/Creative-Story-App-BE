@@ -20,7 +20,10 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "story",
         uniqueConstraints = {
-                @UniqueConstraint(name = "AuthorTitleStoryUnique", columnNames = {"userId", "title"})
+                @UniqueConstraint(
+                        name = "AuthorTitleStoryUnique",
+                        columnNames = {"author_id", "title"}
+                )
         })
 public class Story {
 

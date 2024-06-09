@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 @Builder
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "sectionContent")
+@Table(name = "section_content")
 public class SectionContent {
 
 	@Id
