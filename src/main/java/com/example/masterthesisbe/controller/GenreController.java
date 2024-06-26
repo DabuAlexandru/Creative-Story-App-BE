@@ -24,6 +24,11 @@ public class GenreController extends ValidationHandler {
         return ResponseEntity.ok().body(this.genreService.getGenreDictionaries());
     }
 
+    @GetMapping("/get-all")
+    public ResponseEntity<List<GenreResponseDto>> retrieveAllGenres() {
+        return ResponseEntity.ok().body(this.genreService.getAllGenres());
+    }
+
     @GetMapping("/get-main")
     public ResponseEntity<List<GenreResponseDto>> retrieveAllMainGenres() {
         return ResponseEntity.ok().body(this.genreService.getGenres(null));

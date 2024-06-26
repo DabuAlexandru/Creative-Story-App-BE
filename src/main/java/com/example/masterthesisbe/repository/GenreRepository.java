@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Integer> {
     List<Genre> findAllByMainGenreIdOrderByName(Integer mainGenreId);
+    List<Genre> findAllByOrderByNameAsc();
 }

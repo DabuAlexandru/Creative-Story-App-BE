@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StoryOverallScoreRepository extends JpaRepository<StoryOverallScore, Integer> {
+    boolean existsByStoryId(int storyId);
     StoryOverallScore findFirstByStoryId(int storyId);
 }

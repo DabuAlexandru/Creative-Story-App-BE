@@ -10,6 +10,7 @@ import com.example.masterthesisbe.helpers.mappers.GenreMapper;
 import com.example.masterthesisbe.model.Genre;
 import com.example.masterthesisbe.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +44,10 @@ public class GenreService {
         return subGenres.stream()
                 .map(genreMapper::convertToResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<GenreResponseDto> getAllGenres() {
+        return genreRepository.findAllByOrderByNameAsc().stream().map(genreMapper::convertToResponseDto).toList();
     }
 
     public GenreResponseDto getGenreById(Integer genreId) {

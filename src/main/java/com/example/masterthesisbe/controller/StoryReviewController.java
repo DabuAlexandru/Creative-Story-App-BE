@@ -37,4 +37,9 @@ public class StoryReviewController {
         this.storyReviewService.deleteReviewOfStory(storyId);
         return ResponseEntity.ok().body(StoryReviewConstants.DELETE_OK_MESSAGE);
     }
+
+    @GetMapping("/get/for-story/{storyId}/of-profile/{userProfileId}")
+    public ResponseEntity<StoryReviewResponseDto> getReviewByStoryAndProfile(@PathVariable Integer storyId, @PathVariable Integer userProfileId) {
+        return ResponseEntity.ok().body(this.storyReviewService.getReviewByStoryAndProfile(storyId, userProfileId));
+    }
 }

@@ -6,8 +6,10 @@ import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.StoryMapper;
 import com.example.masterthesisbe.model.*;
 import com.example.masterthesisbe.repository.StoryRepository;
+import com.example.masterthesisbe.specification.StorySpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +25,38 @@ public class StoryService {
     private final FileInstanceService fileInstanceService;
 
     private final StoryMapper storyMapper;
+
+    private Page<Story> getFilteredStories(StoryFilterRequestDto filtersPayload, Pageable pageable) {
+        Specification<Story> spec = Specification.where(null);
+
+        String title = filtersPayload.getTitle();
+        if (title != null && !title.isEmpty()) {
+            spec = spec.and(StorySpecification.titleContains(title));
+        }
+
+        List<Integer> authorIds = filtersPayload.getAuthorIds();
+        if (authorIds != null && !authorIds.isEmpty()) {
+            spec = spec.and(StorySpecification.authorIdIn(authorIds));
+        }
+
+        List<Integer> genreIds = filtersPayload.getGenreIds();
+        if (genreIds != null && !genreIds.isEmpty()) {
+            spec = spec.and(StorySpecification.genresIn(genreIds));
+        }
+
+        return storyRepository.findAll(spec, pageable);
+    }
+
+    public Page<StoryResponseDto> getFilteredStoriesPaginate(StoryFilterRequestDto filtersPayload, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        Page<Story> storiesPagination = getFilteredStories(filtersPayload, pageable);
+
+        List<StoryResponseDto> content = storiesPagination.getContent().stream()
+                .map(storyMapper::convertToResponseDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(content, storiesPagination.getPageable(), storiesPagination.getTotalElements());
+    }
 
     public Page<StoryResponseDto> getStoriesPaginate(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());

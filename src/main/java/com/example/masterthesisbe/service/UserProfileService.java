@@ -5,10 +5,13 @@ import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.UserProfileMapper;
 import com.example.masterthesisbe.model.*;
 import com.example.masterthesisbe.repository.*;
+import com.example.masterthesisbe.specification.UserProfileSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,6 +43,16 @@ public class UserProfileService {
         response.setReadingLists(readLater);
 
         return response;
+    }
+
+    public List<MinimalReferenceResponseDto> getAllAuthors(String penName) {
+        Specification<UserProfile> spec = UserProfileSpecification.isAuthor();
+        if (penName != null && !penName.isEmpty()) {
+            spec = spec.and(UserProfileSpecification.penNameContains(penName));
+        }
+        return userProfileRepository.findAll(spec).stream()
+                .map(userProfile -> new MinimalReferenceResponseDto(userProfile.getId(), userProfile.getPenName()))
+                .toList();
     }
 
     public UserProfileReducedResponseDto getReducedProfileOfUser() {

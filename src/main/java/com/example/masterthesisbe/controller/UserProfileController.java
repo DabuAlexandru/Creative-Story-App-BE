@@ -1,5 +1,6 @@
 package com.example.masterthesisbe.controller;
 
+import com.example.masterthesisbe.dto.userProfile.MinimalReferenceResponseDto;
 import com.example.masterthesisbe.dto.userProfile.UpdateUserProfileRequestDto;
 import com.example.masterthesisbe.dto.userProfile.UserProfileReducedResponseDto;
 import com.example.masterthesisbe.dto.userProfile.UserProfileResponseDto;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/user-profile")
@@ -66,5 +69,10 @@ public class UserProfileController extends ValidationHandler {
     public ResponseEntity<String> deleteProfilePicture() {
         this.userProfileService.deleteProfilePicture();
         return ResponseEntity.ok().body("You successfully deleted your profile picture!");
+    }
+
+    @GetMapping("/get-authors")
+    public ResponseEntity<List<MinimalReferenceResponseDto>> getAuthors(@RequestParam String penName) {
+        return ResponseEntity.ok().body(this.userProfileService.getAllAuthors(penName));
     }
 }

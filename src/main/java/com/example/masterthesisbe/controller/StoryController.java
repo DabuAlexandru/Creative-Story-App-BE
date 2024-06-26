@@ -1,10 +1,7 @@
 package com.example.masterthesisbe.controller;
 
 import com.example.masterthesisbe.constants.StoryConstants;
-import com.example.masterthesisbe.dto.story.CreateStoryRequestDto;
-import com.example.masterthesisbe.dto.story.StoryContentResponseDto;
-import com.example.masterthesisbe.dto.story.StoryResponseDto;
-import com.example.masterthesisbe.dto.story.UpdateStoryRequestDto;
+import com.example.masterthesisbe.dto.story.*;
 import com.example.masterthesisbe.helpers.handlers.ValidationHandler;
 import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.service.StoryService;
@@ -31,6 +28,16 @@ public class StoryController extends ValidationHandler {
             @RequestParam(defaultValue = "id") String sortBy) {
         return ResponseEntity.ok().body(this.storyService.getStoriesPaginate(page, size, sortBy));
     }
+
+    @PostMapping("/get-all-filtered")
+    public ResponseEntity<Page<StoryResponseDto>> retrieveAllStoriesFiltered(
+            @RequestBody StoryFilterRequestDto filters,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return ResponseEntity.ok().body(this.storyService.getFilteredStoriesPaginate(filters, page, size, sortBy));
+    }
+
 
     @GetMapping("/of-author/{authorId}")
     public ResponseEntity<List<StoryResponseDto>> retrieveStoriesForAuthor(@PathVariable Integer authorId) {

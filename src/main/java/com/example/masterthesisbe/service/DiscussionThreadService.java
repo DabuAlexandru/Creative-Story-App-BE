@@ -4,6 +4,7 @@ import com.example.masterthesisbe.constants.DiscussionConstants;
 import com.example.masterthesisbe.constants.DiscussionThreadConstants;
 import com.example.masterthesisbe.dto.discussionThread.CreateDiscussionThreadRequestDto;
 import com.example.masterthesisbe.dto.discussionThread.DiscussionThreadResponseDto;
+import com.example.masterthesisbe.dto.discussionThread.DiscussionThreadWithCommCountResponseDto;
 import com.example.masterthesisbe.dto.discussionThread.UpdateDiscussionThreadRequestDto;
 import com.example.masterthesisbe.dto.general.CountPaginateResponseDto;
 import com.example.masterthesisbe.exception.ApiException;
@@ -31,19 +32,26 @@ public class DiscussionThreadService {
     private final DiscussionThreadMapper discussionThreadMapper;
     private final AuthenticationService authService;
 
-    public Page<DiscussionThreadResponseDto> getDiscussionThreadsOfMainThreadPaginate(int mainThreadId, int page, int size, String sortBy) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-        Page<DiscussionThread> discussionThreadsPagination = this.discussionThreadRepository.findAllPaginateByMainThreadIdOrderByCreatedByDesc(mainThreadId, pageable);
+    private DiscussionThreadWithCommCountResponseDto convertToCompleteResponseDto(DiscussionThread discussionThread) {
+        DiscussionThreadWithCommCountResponseDto responseDto = discussionThreadMapper.convertToResponseWithCountDto(discussionThread);
+        int commentsCount = discussionThreadRepository.countAllByMainThreadId(discussionThread.getId());
+        responseDto.setCommentsCount(commentsCount);
+        return responseDto;
+    }
 
-        List<DiscussionThreadResponseDto> content = discussionThreadsPagination.getContent().stream()
-                .map(discussionThreadMapper::convertToResponseDto)
+    public Page<DiscussionThreadWithCommCountResponseDto> getDiscussionThreadsOfMainThreadPaginate(int mainThreadId, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        Page<DiscussionThread> discussionThreadsPagination = this.discussionThreadRepository.findAllPaginateByMainThreadIdOrderByCreatedOnDesc(mainThreadId, pageable);
+
+        List<DiscussionThreadWithCommCountResponseDto> content = discussionThreadsPagination.getContent().stream()
+                .map(this::convertToCompleteResponseDto)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(content, discussionThreadsPagination.getPageable(), discussionThreadsPagination.getTotalElements());
     }
 
     public List<DiscussionThreadResponseDto> getAllDiscussionThreadsOfMainThread(int mainThreadId) {
-        return discussionThreadRepository.findAllByMainThreadIdOrderByCreatedByDesc(mainThreadId).stream()
+        return discussionThreadRepository.findAllByMainThreadIdOrderByCreatedOnDesc(mainThreadId).stream()
                 .map(discussionThreadMapper::convertToResponseDto)
                 .collect(Collectors.toList());
     }
@@ -59,19 +67,26 @@ public class DiscussionThreadService {
         return new PageImpl<>(content, discussionThreadsPagination.getPageable(), discussionThreadsPagination.getTotalElements());
     }
 
-    public CountPaginateResponseDto getThreadsOfDiscussionPagesCount(int discussionId, int size) {
-        int threadsCount = discussionThreadRepository.countAllByDiscussionId(discussionId);
+    public CountPaginateResponseDto getThreadsOfMainThreadPagesCount(int mainThreadId, int size) {
+        int threadsCount = discussionThreadRepository.countAllByMainThreadId(mainThreadId);
         int pagesCount = (int)Math.ceil((double) threadsCount / size);
 
         return new CountPaginateResponseDto(threadsCount, pagesCount);
     }
 
-    public Page<DiscussionThreadResponseDto> getDiscussionThreadsOfDiscussionPaginate(int discussionId, int page, int size, String sortBy) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-        Page<DiscussionThread> discussionThreadsPagination = this.discussionThreadRepository.findAllPaginateByDiscussionIdOrderByCreatedByDesc(discussionId, pageable);
+    public CountPaginateResponseDto getThreadsOfDiscussionPagesCount(int discussionId, Integer mainThreadId, int size) {
+        int threadsCount = discussionThreadRepository.countAllByDiscussionIdAndMainThreadId(discussionId, mainThreadId);
+        int pagesCount = (int)Math.ceil((double) threadsCount / size);
 
-        List<DiscussionThreadResponseDto> content = discussionThreadsPagination.getContent().stream()
-                .map(discussionThreadMapper::convertToResponseDto)
+        return new CountPaginateResponseDto(threadsCount, pagesCount);
+    }
+
+    public Page<DiscussionThreadWithCommCountResponseDto> getDiscussionThreadsOfDiscussionPaginate(int discussionId, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        Page<DiscussionThread> discussionThreadsPagination = this.discussionThreadRepository.findAllPaginateByDiscussionIdAndMainThreadIdOrderByCreatedOnDesc(discussionId, null, pageable);
+
+        List<DiscussionThreadWithCommCountResponseDto> content = discussionThreadsPagination.getContent().stream()
+                .map(this::convertToCompleteResponseDto)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(content, discussionThreadsPagination.getPageable(), discussionThreadsPagination.getTotalElements());

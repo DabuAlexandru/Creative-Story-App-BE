@@ -33,7 +33,10 @@ public class StoryReview {
     private Timestamp createdOn;
 
     private String title;
+
+    @Column(columnDefinition = "varchar(1020)")
     private String content;
+
     private int completionPercentage;
 
     private int characterScore;

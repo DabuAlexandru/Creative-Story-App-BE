@@ -27,11 +27,11 @@ public class UserProfile {
     private String location;
     private String website;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_picture_id")
     private FileInstance profilePicture;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

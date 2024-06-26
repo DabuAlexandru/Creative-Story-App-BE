@@ -32,6 +32,8 @@ public class Story {
     private int id;
 
     private String title;
+
+    @Column(columnDefinition = "varchar(1020)")
     private String description;
 
     @CreatedDate
