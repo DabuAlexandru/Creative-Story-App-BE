@@ -30,6 +30,8 @@ public class DiscussionThreadMapper {
                 discussionThread.getContent(),
                 convertedAuthor,
                 0,
+                0,
+                (byte) 0,
                 discussionThread.getCreatedOn(),
                 discussionThread.getLastUpdatedOn()
         );

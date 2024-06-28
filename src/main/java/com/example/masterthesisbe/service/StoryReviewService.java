@@ -1,19 +1,21 @@
 package com.example.masterthesisbe.service;
 
+import com.example.masterthesisbe.dto.discussionThread.DiscussionThreadWithCommCountResponseDto;
 import com.example.masterthesisbe.dto.storyReview.AddStoryReviewRequestDto;
 import com.example.masterthesisbe.dto.storyReview.StoryReviewResponseDto;
+import com.example.masterthesisbe.dto.storyReview.StoryReviewWithVotesResponseDto;
 import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.StoryReviewMapper;
-import com.example.masterthesisbe.model.Story;
-import com.example.masterthesisbe.model.StoryReview;
-import com.example.masterthesisbe.model.UserProfile;
+import com.example.masterthesisbe.model.*;
 import com.example.masterthesisbe.repository.StoryRepository;
 import com.example.masterthesisbe.repository.StoryReviewRepository;
+import com.example.masterthesisbe.repository.StoryReviewVoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -22,17 +24,34 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class StoryReviewService {
     private final StoryReviewRepository storyReviewRepository;
+    private final StoryReviewVoteRepository storyReviewVoteRepository;
     private final StoryRepository storyRepository;
     private final StoryOverallScoreService storyOverallScoreService;
     private final StoryReviewMapper storyReviewMapper;
     private final AuthenticationService authService;
 
-    public Page<StoryReviewResponseDto> getStoryReviewsPaginate(int storyId, int page, int size, String sortBy) {
+    private StoryReviewWithVotesResponseDto convertToCompleteResponseDto(StoryReview storyReview) {
+        UserProfile author = authService.getCurrentUserProfile();
+
+        StoryReviewWithVotesResponseDto responseDto = storyReviewMapper.convertToVoteResponseDto(storyReview);
+
+        int voteValue = storyReviewVoteRepository.getVoteSumByStoryReviewId(storyReview.getId());
+        Optional<StoryReviewVote> foundVote =
+                storyReviewVoteRepository.findByUserProfileIdAndReviewId(author.getId(), storyReview.getId());
+        byte userVote = foundVote.isPresent() ? foundVote.get().getVoteValue() : 0;
+
+        responseDto.setVoteValue(voteValue);
+        responseDto.setUserVote(userVote);
+
+        return responseDto;
+    }
+
+    public Page<StoryReviewWithVotesResponseDto> getStoryReviewsPaginate(int storyId, int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
         Page<StoryReview> storyReviewsPagination = this.storyReviewRepository.findAllByStoryId(storyId, pageable);
 
-        List<StoryReviewResponseDto> content = storyReviewsPagination.getContent().stream()
-                .map(storyReviewMapper::convertToResponseDto)
+        List<StoryReviewWithVotesResponseDto> content = storyReviewsPagination.getContent().stream()
+                .map(this::convertToCompleteResponseDto)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(content, storyReviewsPagination.getPageable(), storyReviewsPagination.getTotalElements());

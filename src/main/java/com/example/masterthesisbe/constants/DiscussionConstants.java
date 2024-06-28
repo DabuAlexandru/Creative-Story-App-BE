@@ -5,4 +5,5 @@ public class DiscussionConstants {
     public static final String CONTENT_NOT_BLANK_CONSTRAINT_MESSAGE = "Content is required!";
     public static final String DISCUSSION_NOT_FOUND_MESSAGE = "Discussion not found!";
     public static final String NO_PERMISSION_TO_MODIFY = "Cannot edit a discussion that is not yours!";
+    public static final String DISCUSSION_NOT_NULL_CONSTRAINT_MESSAGE = "Provide a discussion reference!";
 }

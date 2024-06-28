@@ -16,6 +16,8 @@ public class DiscussionResponseDto {
     private String content;
     private UserProfileReferenceResponseDto author;
     private int commentsCount;
+    private int voteValue;
+    private byte userVote;
     private Timestamp createdOn;
     private Timestamp lastUpdatedOn;
 }

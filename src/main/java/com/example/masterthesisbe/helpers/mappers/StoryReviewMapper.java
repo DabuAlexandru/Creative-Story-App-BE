@@ -8,6 +8,7 @@ import com.example.masterthesisbe.dto.story.StoryResponseDto;
 import com.example.masterthesisbe.dto.story.UpdateStoryRequestDto;
 import com.example.masterthesisbe.dto.storyReview.AddStoryReviewRequestDto;
 import com.example.masterthesisbe.dto.storyReview.StoryReviewResponseDto;
+import com.example.masterthesisbe.dto.storyReview.StoryReviewWithVotesResponseDto;
 import com.example.masterthesisbe.dto.userProfile.UserProfileReferenceResponseDto;
 import com.example.masterthesisbe.dto.userProfile.UserProfileResponseDto;
 import com.example.masterthesisbe.model.Story;
@@ -47,6 +48,30 @@ public class StoryReviewMapper {
                 storyReview.getThemeScore(),
                 storyReview.getCreatedOn(),
                 convertedUserProfile
+        );
+    }
+
+    public StoryReviewWithVotesResponseDto convertToVoteResponseDto(StoryReview storyReview) {
+        if (isNull(storyReview)) {
+            return null;
+        }
+
+        UserProfile userProfile = storyReview.getUserProfile();
+        UserProfileReferenceResponseDto convertedUserProfile = userProfileMapper.convertToReferenceResponseDto(userProfile);
+
+        return new StoryReviewWithVotesResponseDto(
+                storyReview.getId(),
+                storyReview.getTitle(),
+                storyReview.getContent(),
+                storyReview.getCharacterScore(),
+                storyReview.getConflictScore(),
+                storyReview.getPlotScore(),
+                storyReview.getSettingScore(),
+                storyReview.getThemeScore(),
+                storyReview.getCreatedOn(),
+                convertedUserProfile,
+                0,
+                (byte) 0
         );
     }
 

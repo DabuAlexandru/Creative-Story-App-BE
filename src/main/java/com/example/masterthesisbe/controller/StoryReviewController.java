@@ -3,6 +3,7 @@ package com.example.masterthesisbe.controller;
 import com.example.masterthesisbe.constants.StoryReviewConstants;
 import com.example.masterthesisbe.dto.storyReview.AddStoryReviewRequestDto;
 import com.example.masterthesisbe.dto.storyReview.StoryReviewResponseDto;
+import com.example.masterthesisbe.dto.storyReview.StoryReviewWithVotesResponseDto;
 import com.example.masterthesisbe.service.StoryReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,7 @@ public class StoryReviewController {
     private final StoryReviewService storyReviewService;
 
     @GetMapping("/get-all/of-story/{storyId}")
-    public ResponseEntity<Page<StoryReviewResponseDto>> retrieveAllReviewsOfStory(
+    public ResponseEntity<Page<StoryReviewWithVotesResponseDto>> retrieveAllReviewsOfStory(
             @PathVariable Integer storyId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,

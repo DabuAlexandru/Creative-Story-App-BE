@@ -30,6 +30,8 @@ public class DiscussionMapper {
                 discussion.getContent(),
                 convertedAuthor,
                 0,
+                0,
+                (byte) 0,
                 discussion.getCreatedOn(),
                 discussion.getLastUpdatedOn()
         );

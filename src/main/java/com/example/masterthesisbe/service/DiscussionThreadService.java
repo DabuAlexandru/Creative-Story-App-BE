@@ -9,17 +9,16 @@ import com.example.masterthesisbe.dto.discussionThread.UpdateDiscussionThreadReq
 import com.example.masterthesisbe.dto.general.CountPaginateResponseDto;
 import com.example.masterthesisbe.exception.ApiException;
 import com.example.masterthesisbe.helpers.mappers.DiscussionThreadMapper;
-import com.example.masterthesisbe.model.Discussion;
-import com.example.masterthesisbe.model.DiscussionThread;
-import com.example.masterthesisbe.model.User;
-import com.example.masterthesisbe.model.UserProfile;
+import com.example.masterthesisbe.model.*;
 import com.example.masterthesisbe.repository.DiscussionRepository;
 import com.example.masterthesisbe.repository.DiscussionThreadRepository;
+import com.example.masterthesisbe.repository.DiscussionThreadVoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -28,14 +27,27 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class DiscussionThreadService {
     private final DiscussionThreadRepository discussionThreadRepository;
+    private final DiscussionThreadVoteRepository discussionThreadVoteRepository;
     private final DiscussionRepository discussionRepository;
     private final DiscussionThreadMapper discussionThreadMapper;
     private final AuthenticationService authService;
 
     private DiscussionThreadWithCommCountResponseDto convertToCompleteResponseDto(DiscussionThread discussionThread) {
+        UserProfile author = authService.getCurrentUserProfile();
+
         DiscussionThreadWithCommCountResponseDto responseDto = discussionThreadMapper.convertToResponseWithCountDto(discussionThread);
+
         int commentsCount = discussionThreadRepository.countAllByMainThreadId(discussionThread.getId());
+        int voteValue = discussionThreadVoteRepository.getVoteSumByThreadId(discussionThread.getId());
+
+        Optional<DiscussionThreadVote> foundVote =
+                discussionThreadVoteRepository.findByUserProfileIdAndThreadId(author.getId(), discussionThread.getId());
+        byte userVote = foundVote.isPresent() ? foundVote.get().getVoteValue() : 0;
+
         responseDto.setCommentsCount(commentsCount);
+        responseDto.setVoteValue(voteValue);
+        responseDto.setUserVote(userVote);
+
         return responseDto;
     }
 
