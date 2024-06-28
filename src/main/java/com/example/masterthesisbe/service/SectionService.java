@@ -90,7 +90,13 @@ public class SectionService {
         return sectionMapper.convertToResponseDto(newSection);
     }
 
-    public SectionResponseDto updateSection(Integer sectionId, UpdateSectionRequestDto updatedSection) {
+    public List<SectionResponseDto> updateSections(List<UpdateSectionWithRefRequestDto> updatedSections) {
+        return updatedSections.stream()
+                .map(updatedSection -> this.updateSectionWithRef(updatedSection.getId(), updatedSection))
+                .toList();
+    }
+
+    private Section getSectionForModify(Integer sectionId) {
         Section section = this.sectionRepository.findById(sectionId)
                 .orElseThrow(() -> new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE));
 
@@ -98,19 +104,26 @@ public class SectionService {
         if (loggedInUser.getId() != section.getStory().getAuthor().getUser().getId()) {
             throw new ApiException(SectionConstants.NO_PERMISSIONS_TO_MODIFY);
         }
+
+        return section;
+    }
+
+    public SectionResponseDto updateSectionWithRef(Integer sectionId, UpdateSectionWithRefRequestDto updatedSection) {
+        Section section = getSectionForModify(sectionId);
+
+        sectionMapper.updateSectionWithDto(section, updatedSection);
+        return this.sectionMapper.convertToResponseDto(sectionRepository.save(section));
+    }
+
+    public SectionResponseDto updateSection(Integer sectionId, UpdateSectionRequestDto updatedSection) {
+        Section section = getSectionForModify(sectionId);
 
         sectionMapper.updateSectionWithDto(section, updatedSection);
         return this.sectionMapper.convertToResponseDto(sectionRepository.save(section));
     }
 
     public void updateSectionContent(Integer sectionId, UpdateSectionContentRequestDto updatedSection) {
-        Section section = this.sectionRepository.findById(sectionId)
-                .orElseThrow(() -> new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE));
-
-        User loggedInUser = authService.getLoggedInUser();
-        if (loggedInUser.getId() != section.getStory().getAuthor().getUser().getId()) {
-            throw new ApiException(SectionConstants.NO_PERMISSIONS_TO_MODIFY);
-        }
+        Section section = getSectionForModify(sectionId);
 
         Optional<SectionContent> sectionContent = this.sectionContentRepository.findFirstBySectionId(sectionId);
         if (sectionContent.isEmpty()) {
@@ -125,11 +138,7 @@ public class SectionService {
     }
 
     public void deleteSection(Integer sectionId) {
-        boolean exists = this.sectionRepository.existsById(sectionId);
-
-        if(!exists) {
-            throw new ApiException(SectionConstants.SECTION_NOT_FOUND_MESSAGE);
-        }
+        getSectionForModify(sectionId);
         Optional<SectionContent> sectionContent = this.sectionContentRepository.findFirstBySectionId(sectionId);
         sectionContent.ifPresent(content -> this.sectionContentRepository.deleteById(content.getId()));
 

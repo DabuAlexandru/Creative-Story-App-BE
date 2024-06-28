@@ -61,4 +61,9 @@ public class SectionMapper {
     public void updateSectionWithDto(Section section, UpdateSectionRequestDto sectionDto) {
         section.setTitle(sectionDto.getTitle());
     }
+
+    public void updateSectionWithDto(Section section, UpdateSectionWithRefRequestDto sectionDto) {
+        section.setTitle(sectionDto.getTitle());
+        section.setDisplayOrder(sectionDto.getDisplayOrder());
+    }
 }

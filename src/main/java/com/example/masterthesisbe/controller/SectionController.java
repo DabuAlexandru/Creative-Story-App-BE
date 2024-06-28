@@ -57,6 +57,11 @@ public class SectionController extends ValidationHandler {
         return ResponseEntity.ok().body(this.sectionService.updateSection(sectionId, updatedSection));
     }
 
+    @PutMapping("/update-list")
+    public ResponseEntity<List<SectionResponseDto>> updateSectionList(@Valid @RequestBody List<UpdateSectionWithRefRequestDto> updatedSection) {
+        return ResponseEntity.ok().body(this.sectionService.updateSections(updatedSection));
+    }
+
     @PutMapping("/update/content/{sectionId}")
     public ResponseEntity<String> updateSectionContent(@PathVariable Integer sectionId, @Valid @RequestBody UpdateSectionContentRequestDto updatedSection) {
         this.sectionService.updateSectionContent(sectionId, updatedSection);

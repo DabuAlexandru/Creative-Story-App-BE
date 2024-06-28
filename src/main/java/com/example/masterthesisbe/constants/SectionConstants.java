@@ -6,4 +6,6 @@ public class SectionConstants {
     public static final String SECTION_UPDATE_CONTENT = "Section content successfully updated!";
     public static final String DELETE_OK_MESSAGE = "Section successfully deleted!";
     public static final String NO_PERMISSIONS_TO_MODIFY = "No permission to modify!";
+    public static final String SECTION_NOT_NULL_CONSTRAINT_MESSAGE = "Provide a section reference!";
+    public static final String ORDER_NOT_NULL_CONSTRAINT_MESSAGE = "Provide a valid display order!";
 }
