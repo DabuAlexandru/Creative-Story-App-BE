@@ -110,7 +110,7 @@ public class DiscussionThreadService {
         return this.discussionThreadMapper.convertToResponseDto(foundThread);
     }
     
-    public DiscussionThreadResponseDto createNewDiscussionThread(CreateDiscussionThreadRequestDto discussionThread) {
+    public DiscussionThreadWithCommCountResponseDto createNewDiscussionThread(CreateDiscussionThreadRequestDto discussionThread) {
         DiscussionThread convertedDiscussionThread = discussionThreadMapper.convertFromCreateRequestDto(discussionThread);
         UserProfile author = authService.getCurrentUserProfile();
         convertedDiscussionThread.setAuthor(author);
@@ -127,7 +127,7 @@ public class DiscussionThreadService {
         convertedDiscussionThread.setDiscussion(discussion);
 
         DiscussionThread newDiscussionThread = discussionThreadRepository.save(convertedDiscussionThread);
-        return discussionThreadMapper.convertToResponseDto(newDiscussionThread);
+        return discussionThreadMapper.convertToResponseWithCountDto(newDiscussionThread);
     }
 
     public DiscussionThreadResponseDto updateDiscussionThread(Integer discussionThreadId, UpdateDiscussionThreadRequestDto updatedDiscussionThread) {

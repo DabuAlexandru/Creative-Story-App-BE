@@ -85,7 +85,7 @@ public class DiscussionThreadController extends ValidationHandler {
     }
     
     @PostMapping("/create")
-    public ResponseEntity<DiscussionThreadResponseDto> createDiscussionThread(
+    public ResponseEntity<DiscussionThreadWithCommCountResponseDto> createDiscussionThread(
             @Valid @RequestBody CreateDiscussionThreadRequestDto newDiscussionThread) {
         return ResponseEntity.ok().body(
                 this.discussionThreadService.createNewDiscussionThread(newDiscussionThread)
