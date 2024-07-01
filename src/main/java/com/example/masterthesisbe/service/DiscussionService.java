@@ -53,7 +53,7 @@ public class DiscussionService {
     }
 
     public Page<DiscussionResponseDto> getDiscussionsPaginate(int page, int size, String sortBy) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         Page<Discussion> discussionsPagination = this.discussionRepository.findAll(pageable);
 
         List<DiscussionResponseDto> content = discussionsPagination.getContent().stream()
@@ -64,7 +64,7 @@ public class DiscussionService {
     }
 
     public Page<DiscussionResponseDto> getDiscussionsOfAuthorPaginate(int authorId, int page, int size, String sortBy) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         Page<Discussion> discussionsPagination = this.discussionRepository.findAllPaginateByAuthorId(authorId, pageable);
 
         List<DiscussionResponseDto> content = discussionsPagination.getContent().stream()
