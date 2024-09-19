@@ -1,6 +1,5 @@
 package com.example.masterthesisbe.repository;
 
-import com.example.masterthesisbe.model.SectionNote;
 import com.example.masterthesisbe.model.Story;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -14,5 +13,5 @@ public interface StoryRepository extends
         JpaRepository<Story, Integer>,
         JpaSpecificationExecutor<Story>,
         PagingAndSortingRepository<Story, Integer> {
-    List<Story> findByAuthorId(long authorId);
+    List<Story> findByAuthorIdAndPublished(long authorId, boolean isPublished);
 }

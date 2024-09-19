@@ -1,9 +1,7 @@
 package com.example.masterthesisbe.controller;
 
-import com.example.masterthesisbe.constants.StoryConstants;
 import com.example.masterthesisbe.dto.story.*;
 import com.example.masterthesisbe.helpers.handlers.ValidationHandler;
-import com.example.masterthesisbe.model.Story;
 import com.example.masterthesisbe.service.StoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/story")
@@ -39,9 +36,9 @@ public class StoryController extends ValidationHandler {
     }
 
 
-    @GetMapping("/of-author/{authorId}")
-    public ResponseEntity<List<StoryResponseDto>> retrieveStoriesForAuthor(@PathVariable Integer authorId) {
-        return ResponseEntity.ok().body(this.storyService.getAllStoriesOfAuthor(authorId));
+    @GetMapping("/of-author/{authorId}/{isPublished}")
+    public ResponseEntity<List<StoryResponseDto>> retrieveStoriesForAuthor(@PathVariable Integer authorId, @PathVariable boolean isPublished) {
+        return ResponseEntity.ok().body(this.storyService.getAllStoriesOfAuthor(authorId, isPublished));
     }
 
     @GetMapping("/{storyId}")
@@ -57,6 +54,12 @@ public class StoryController extends ValidationHandler {
     @PostMapping("/create")
     public ResponseEntity<StoryResponseDto> createNewStory(@Valid @RequestBody CreateStoryRequestDto newStory) {
         return ResponseEntity.ok().body(this.storyService.createNewStory(newStory));
+    }
+
+    @PostMapping("/publish/{storyId}")
+    public ResponseEntity<Void> publishStory(@PathVariable Integer storyId) {
+        this.storyService.publishStory(storyId);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/update/{storyId}")

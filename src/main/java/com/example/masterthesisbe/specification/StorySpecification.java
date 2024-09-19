@@ -18,4 +18,8 @@ public class StorySpecification {
     public static Specification<Story> genresIn(List<Integer> genreIds) {
         return (root, query, builder) -> root.join("genres").get("id").in(genreIds);
     }
+
+    public static Specification<Story> isPublished(Boolean published) {
+        return (root, query, builder) -> builder.equal(root.get("published"), published);
+    }
 }

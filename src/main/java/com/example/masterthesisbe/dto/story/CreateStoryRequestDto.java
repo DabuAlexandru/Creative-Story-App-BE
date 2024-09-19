@@ -20,7 +20,10 @@ import java.util.List;
 public class CreateStoryRequestDto {
     @NotBlank(message = StoryConstants.TITLE_NOT_BLANK_CONSTRAINT_MESSAGE)
     private String title;
+    @NotBlank(message = StoryConstants.DESCRIPTION_NOT_BLANK_CONSTRAINT_MESSAGE)
     private String description;
+    @NotBlank(message = StoryConstants.PREVIEW_NOT_BLANK_CONSTRAINT_MESSAGE)
+    private String preview;
 
     @NotNull(message = StoryConstants.GENRES_NOT_NULL_CONSTRAINT_MESSAGE)
     @NotEmpty(message = StoryConstants.NON_EMPTY_MAIN_GENRE_LIST)

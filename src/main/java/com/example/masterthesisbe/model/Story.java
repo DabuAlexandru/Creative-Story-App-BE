@@ -36,6 +36,8 @@ public class Story {
     @Column(columnDefinition = "varchar(1020)")
     private String description;
 
+    private boolean published = false;
+
     @CreatedDate
     private Timestamp createdOn;
     @LastModifiedDate

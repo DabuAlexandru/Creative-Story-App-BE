@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -52,6 +54,9 @@ public class StoryReview {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_profile_id")
     private UserProfile userProfile;
+
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoryReviewVote> votes = new ArrayList<>();
 
     public StoryReview(String title, String content, int completionPercentage, int characterScore, int conflictScore, int plotScore, int settingScore, int themeScore) {
         this.title = title;
